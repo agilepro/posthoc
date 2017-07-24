@@ -49,6 +49,7 @@ app.controller('myCtrl', function($scope, $http) {
         <p><a href="delete.jsp?check=yes">
             <button type="button" class="btn btn-danger">Delete All Mail</button>
             </a></p>
+        <p>Running build version: <% HTMLWriter.writeHtml(out, PostHocServlet.kmc.buildNumber ); %></p>
 <% } else { %>
         <p>Server configuration problem: </p>
         <ul><%

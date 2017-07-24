@@ -14,18 +14,30 @@ public final class PostHocConfig {
     public String hostName;
     public int    hostPort;
     public File   dataFolder;
+    public String buildNumber;
 
     public PostHocConfig(File appFolder)  throws Exception {
         try {
             File webInfFolder = new File(appFolder, "WEB-INF");
             if (!webInfFolder.exists()) {
                 throw new Exception("The WEB-INF folder does not exist, "
-                        +"something must be wrong with the servlet configuration: "+webInfFolder);
+                        +"something must be wrong with the servlet configuration: "+webInfFolder.toString());
             }
-            File dataLocFile = new File(webInfFolder, "dataLocation.properties");
+            
+            //READ the build number from the file
+            File buildNumFile = new File(webInfFolder, "BuildInfo.properties");
+            if (!buildNumFile.exists()) {
+                throw new Exception("The BuildInfo.properties file does not exist, "
+                        +"something must be wrong with the servlet configuration: "+buildNumFile.toString());
+            }
+            Properties buildInfo = readProperties(buildNumFile);
+            buildNumber = buildInfo.getProperty("BuildNumber");
+            
+            //READ the data location
+            File dataLocFile = new File(webInfFolder, "DataLocation.properties");
             if (!dataLocFile.exists()) {
-                throw new Exception("The dataLocation.properties file does not exist, "
-                        +"something must be wrong with the servlet configuration: "+dataLocFile);
+                throw new Exception("The DataLocation.properties file does not exist, "
+                        +"something must be wrong with the servlet configuration: "+dataLocFile.toString());
             }
             Properties props = readProperties(dataLocFile);
     
@@ -40,16 +52,16 @@ public final class PostHocConfig {
                     throw new Exception("The PostHoc data folder does not exist, "
                             +"and the server is unable to create it: "+dataFolder);                    
                 }
-                System.out.println("PostHoc server created the data folder as: "+dataFolder);
+                System.out.println("PostHoc server created the data folder as: "+dataFolder.toString());
             }
             if (!dataFolder.isDirectory()) {
                 throw new Exception("The PostHoc data folder appears to be a file, and not a directory/folder: "
-                       +dataFolder);                    
+                       +dataFolder.toString());                    
             }
             
-            File realConfigFile = new File(dataFolder, "config.properties");
+            File realConfigFile = new File(dataFolder, "Config.properties");
             if (!realConfigFile.exists()) {
-                File protoConfigFile = new File(webInfFolder, "config.properties");
+                File protoConfigFile = new File(webInfFolder, "Config.properties");
                 StreamHelper.copyFileToFile(protoConfigFile, realConfigFile);
             }
             if (!realConfigFile.exists()) {
