@@ -1,0 +1,36 @@
+
+body {
+    width:800;
+}
+div.emailbox {
+    background-color:white;
+    padding:4px;
+    width:800px;
+}
+div.msgmain {
+    margin:20px;
+    margin-left:50px;
+    width:800px;
+}
+td {
+    vertical-align: top;
+}
+
+.iconbutton {
+    font-size:130%;
+    color:gray;
+    padding:5px;
+    padding-left:15px;
+    padding-right:15px;
+    margin-left:3px;
+    margin-right:3px;
+}
+.iconbutton-disabled {
+    font-size:130%;
+    color:lightgray;
+    padding:5px;
+    padding-left:15px;
+    padding-right:15px;
+    margin-left:3px;
+    margin-right:3px;
+}

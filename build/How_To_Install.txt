@@ -1,0 +1,40 @@
+READ ME for Installation
+
+These are the installation instructions for Post Hoc.  There is a separate readme for doing the build.  These instructions assume that you have a posthoc.war file and are ready to put that into a running TomCat server.
+
+
+
+=== Requirements ====
+
+The only thing you need for Post Hoc is:
+1) a running and functional TomCat server
+   for the purpose of documentation we will assume this is at C:\tomcat\ but of course you may have it installed at another location, substitute your locataion when appropriate.
+   for the purpose of documentation, we will assume the web location is http://myserver:80/ but of course you may configured it to be at a different web address, substitute your address where appropriate.
+   
+   
+=== Data Location ===
+
+Data is all stored as files on a file system.  There one folder necessary.  It does not need to be on the same physical or logical drive with the TomCat.  The default location for this folder is \opt\PostHocData and if you are OK with that location, there is nothing you have to do.
+
+If you would like the data to be in a different folder, then you need to edit the WEB-INF/config.txt file, and change the setting for dataFolder.
+
+# Data Folder
+# Email messages are stored as files in this folder.  One file per message.
+dataFolder=c:/opt/PostHocData/
+
+When the server starts up, it will read this location from the config file, and everything else will be red from the data location.
+
+==== Installation ====
+
+Either drop the posthoc.war file into the webapps directory of TomCat, or else make a new folder in there with the name that you desire for the root of the application, and unzip the contents of the war file to that folder.   For the rest of this we will assume that the name of this folder is "posthoc" however you can use whatever valid webapp name you would like to use.
+
+You can at this point start, or restart the TomCat server, so that it will see the new application.  
+
+Access the application at:  http://myserver:80/posthoc/
+
+If the data folder exists, or if it is able to create the data folder in the specified path, then the PostHoc server should be up and running.  Choose the menu option for "Server Status" and see that everything listed there looks OK.
+
+If you have to change the server name or port, then edit the copy of the config.txt file that is in the data folder.
+
+
+
