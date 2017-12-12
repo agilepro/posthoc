@@ -1,10 +1,10 @@
-package org.workcast.posthoc;
+package com.purplehillsbooks.posthoc;
 
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
 
-import org.workcast.streams.StreamHelper;
+import com.purplehillsbooks.streams.StreamHelper;
 
 /**
  * reads the config file into variables

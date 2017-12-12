@@ -1,4 +1,4 @@
-package org.workcast.posthoc;
+package com.purplehillsbooks.posthoc;
 
 import org.subethamail.smtp.AuthenticationHandler;
 

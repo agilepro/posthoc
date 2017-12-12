@@ -1,4 +1,4 @@
-package org.workcast.posthoc;
+package com.purplehillsbooks.posthoc;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -10,8 +10,10 @@ import java.util.Comparator;
 import java.util.List;
 import java.util.regex.Matcher;
 import java.util.regex.Pattern;
+
 import org.subethamail.smtp.helper.SimpleMessageListener;
-import org.workcast.streams.MemFile;
+
+import com.purplehillsbooks.streams.MemFile;
 
 /**
  * Listens to incoming emails and redirects them to the {@code MailSaver} object.
