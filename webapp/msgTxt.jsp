@@ -13,10 +13,10 @@
 %><%@page import="javax.mail.Multipart"
 %><%@page import="javax.mail.Session"
 %><%@page import="javax.mail.internet.MimeMessage"
-%><%@page import="org.workcast.posthoc.EmailModel"
-%><%@page import="org.workcast.posthoc.MailListener"
-%><%@page import="org.workcast.streams.HTMLWriter"
-%><%@page import="org.workcast.streams.MemFile"
+%><%@page import="com.purplehillsbooks.posthoc.EmailModel"
+%><%@page import="com.purplehillsbooks.posthoc.MailListener"
+%><%@page import="com.purplehillsbooks.streams.HTMLWriter"
+%><%@page import="com.purplehillsbooks.streams.MemFile"
 %><%
 
     String selectedName = request.getParameter("msg");

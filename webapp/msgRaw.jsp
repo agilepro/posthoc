@@ -4,9 +4,9 @@
 %><%@page import="java.io.InputStreamReader"
 %><%@page import="java.net.URLEncoder"
 %><%@page import="java.util.List"
-%><%@page import="org.workcast.posthoc.EmailModel"
-%><%@page import="org.workcast.posthoc.MailListener"
-%><%@page import="org.workcast.streams.HTMLWriter"
+%><%@page import="com.purplehillsbooks.posthoc.EmailModel"
+%><%@page import="com.purplehillsbooks.posthoc.MailListener"
+%><%@page import="com.purplehillsbooks.streams.HTMLWriter"
 %><%
 
     String selectedName = request.getParameter("msg");

@@ -1,7 +1,7 @@
 <%@page errorPage="error.jsp"
-%><%@page import="org.workcast.streams.HTMLWriter"
-%><%@page import="org.workcast.posthoc.PostHocServlet"
-%><%@page import="org.workcast.posthoc.MailListener"
+%><%@page import="com.purplehillsbooks.streams.HTMLWriter"
+%><%@page import="com.purplehillsbooks.posthoc.PostHocServlet"
+%><%@page import="com.purplehillsbooks.posthoc.MailListener"
 %><!DOCTYPE html>
 <html>
 <head>

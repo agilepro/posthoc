@@ -7,7 +7,7 @@
 
     <servlet>
         <servlet-name>MailTester</servlet-name>
-        <servlet-class>org.workcast.posthoc.PostHocServlet</servlet-class>
+        <servlet-class>com.purplehillsbooks.posthoc.PostHocServlet</servlet-class>
         <load-on-startup>5</load-on-startup>
     </servlet>
     <servlet-mapping>

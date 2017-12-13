@@ -3,11 +3,11 @@
 %><%@page import="java.util.Vector"
 %><%@page import="java.util.List"
 %><%@page import="java.util.Date"
-%><%@page import="org.workcast.posthoc.EmailModel"
-%><%@page import="org.workcast.posthoc.MailListener"
-%><%@page import="org.workcast.streams.HTMLWriter"
-%><%@page import="org.workcast.json.JSONArray"
-%><%@page import="org.workcast.json.JSONObject"
+%><%@page import="com.purplehillsbooks.posthoc.EmailModel"
+%><%@page import="com.purplehillsbooks.posthoc.MailListener"
+%><%@page import="com.purplehillsbooks.streams.HTMLWriter"
+%><%@page import="com.purplehillsbooks.json.JSONArray"
+%><%@page import="com.purplehillsbooks.json.JSONObject"
 %><%@page import="java.text.SimpleDateFormat"
 %><%
 
