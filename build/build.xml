@@ -53,7 +53,7 @@
         <javac debug="on" includeAntRuntime="false" nowarn="true"
                srcdir="${source.dir.src}" destdir="${target.dir}/posthoc/WEB-INF/classes"
                target="1.6" source="1.6"
-               includes="org/workcast/posthoc/*.java">
+               includes="com/purplehillsbooks/posthoc/*.java">
             <classpath refid="build.classpath" />
         </javac>
 
