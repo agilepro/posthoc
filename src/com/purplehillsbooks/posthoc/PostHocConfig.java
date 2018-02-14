@@ -13,6 +13,7 @@ public final class PostHocConfig {
 
     public String hostName;
     public int    hostPort;
+    public int    popPort;
     public File   dataFolder;
     public String buildNumber;
 
@@ -80,6 +81,11 @@ public final class PostHocConfig {
                 hostPortStr="2525";
             }
             hostPort = Integer.parseInt(hostPortStr);
+            String popPortStr = props.getProperty("popPort");
+            if (popPortStr==null) {
+                popPortStr="110";
+            }
+            popPort = Integer.parseInt(popPortStr);
             System.out.println("PostHoc CONFIGURATION: "+hostName+":"+hostPort+"  -- Data folder: "+dataFolder);
         }
         catch (Exception e) {

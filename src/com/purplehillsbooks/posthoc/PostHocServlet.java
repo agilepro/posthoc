@@ -13,7 +13,7 @@ public class PostHocServlet extends javax.servlet.http.HttpServlet {
 
     private static final long serialVersionUID = 1L;
     private static File dataFolder;
-    public static PostHocConfig kmc;
+    public static PostHocConfig phConfig;
     public static Exception fatalServerError;
 
     @Override
@@ -27,13 +27,15 @@ public class PostHocServlet extends javax.servlet.http.HttpServlet {
             System.out.println("PostHoc Servlet: Server starting");
             ServletContext sc = config.getServletContext();
             File contextPath = new File(sc.getRealPath("/"));
-            kmc = new PostHocConfig(contextPath);
+            phConfig = new PostHocConfig(contextPath);
 
-            dataFolder = kmc.dataFolder;
-            InetAddress bindAddress = InetAddress.getByName(kmc.hostName);
-            SMTPServerHandler.startServer(kmc.hostPort, bindAddress);
-            System.out.println("PostHocServlet: Server started on "+kmc.hostName+":"+kmc.hostPort);
+            dataFolder = phConfig.dataFolder;
+            InetAddress bindAddress = InetAddress.getByName(phConfig.hostName);
+            SMTPServerHandler.startServer(phConfig.hostPort, bindAddress);
+            System.out.println("PostHocServlet: Server started on "+phConfig.hostName+":"+phConfig.hostPort);
             System.out.println("PostHocServlet: Server saving data in: "+dataFolder);
+            
+            POPServer.startListening(phConfig);
         }
         catch (Exception e) {
             fatalServerError = e;
