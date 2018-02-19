@@ -9,7 +9,6 @@
 %><%@page import="java.net.URLEncoder"
 %><%@page import="java.util.Date"
 %><%@page import="java.util.List"
-%><%@page import="java.util.ArrayList"
 %><%@page import="java.util.Properties"
 %><%@page import="javax.mail.Address"
 %><%@page import="javax.mail.BodyPart"
@@ -17,19 +16,13 @@
 %><%@page import="javax.mail.Session"
 %><%@page import="javax.mail.internet.MimeMessage"
 %><%@page import="com.purplehillsbooks.posthoc.MailListener"
-%><%@page import="com.purplehillsbooks.posthoc.SendMailListener"
 %><%@page import="com.purplehillsbooks.posthoc.EmailModel"
 %><%@page import="com.purplehillsbooks.streams.HTMLWriter"
 %><%@page import="com.purplehillsbooks.streams.MemFile"
 %><%
 
     String selectedName = request.getParameter("msg");
-	String mailType = request.getParameter("mailType");
-    List<EmailModel> msgs= new ArrayList<EmailModel>();
-    if("inbox".equals(mailType))
-    	msgs = MailListener.listAllMessages();
-    else if("outbox".equals(mailType))
-    	msgs = SendMailListener.listAllOutboxMessages();
+    List<EmailModel> msgs = MailListener.listAllMessages();
     File foundMsg = null;
     for (EmailModel msgMod : msgs) {
         File msg = msgMod.filePath;
@@ -49,7 +42,6 @@
 
     Properties props = new Properties();
     Session mSession = Session.getDefaultInstance(props);
-
     HTMLWriter hw = new HTMLWriter(out);
     FileInputStream fis = new FileInputStream(foundMsg);
 
@@ -75,8 +67,8 @@
 
 <script type="text/javascript">
 
-var app = angular.module('myApp', []);
-app.controller('myCtrl', function($scope, $http) {
+var app = angular.module('myApp', ['textAngular']);
+app.controller('myCtrl', ['$scope', '$http', '$window', 'textAngularManager', function myCtrl($scope, $http, $window, textAngularManager) {
     $scope.msg = {};
     $scope.mode = "Message";
 
@@ -87,8 +79,40 @@ app.controller('myCtrl', function($scope, $http) {
     $scope.reportError = function(serverErr) {
         errorPanelHandler($scope, serverErr);
     };
-
-});
+    
+    $scope.mailHeader = {
+    		'from' : '<%writeArray(out, "", mm.getAllRecipients(), "");%>',
+            'to' :  '<%writeArray(out, "", mm.getFrom(), "");%>',
+            'subject' :  'RE: <%HTMLWriter.writeHtml(out, mm.getSubject());%>',
+            'mailType': 'RE'
+    };
+   
+    $scope.sendMail = function() {
+        $http({
+            url : 'servlet/send',
+            method : "POST",
+            data : {
+                'from' :  $scope.mailHeader.from,
+                'to' :  $scope.mailHeader.to,
+                'subject' :  $scope.mailHeader.subject,
+                'mailContent' :  $scope.mailContent,
+                'mailType': $scope.mailHeader.mailType
+            }
+        }).then(function(response) {
+            console.log(response.data);
+            $scope.message = response.data;
+            if($scope.message ==='Status : Mail sent succesfully'){
+            	var res = $window.location.pathname.split("/");
+            	var url = "http://" + $window.location.host + "/" + res[1] + "/list.jsp";
+                $window.location.href = url;
+        	}
+        }, function(response) {
+            console.log(response);
+            $scope.message = response;
+        });
+ 
+    };
+}]);
 </script>
 </head>
 
@@ -97,55 +121,22 @@ app.controller('myCtrl', function($scope, $http) {
 <%@include file="ErrorPanel.jsp"%>
 
 <div class="msgmain">
-<%if("inbox".equals(mailType)){ %>
 <a href="list.jsp">
-    <button class="iconbutton"><span class="glyphicon glyphicon-list"></span>
-    <span>Inbox List</span>
+    <button class="iconbutton"><span class="fa fa-sign-in" style="font-size:24px"></span>
+    <span>Inbox</span>
     </button></a>
-<a href="newMail.jsp">
-    <button class="iconbutton"><span class="fa fa-newspaper-o" style="font-size:24px"></span>
-    <span>New Mail</span>
-    </button></a>
-<span style="margin:20px"></span>
-<a href="msgHtml.jsp?msg=<%=URLEncoder.encode(selectedName)%>&mailType=inbox">
-    <button class="iconbutton"><span class="glyphicon glyphicon-font"></span>
-    <span>Normal</span>
-    </button></a>
-<a href="msgTxt.jsp?msg=<%=URLEncoder.encode(selectedName)%>&mailType=inbox">
-    <button class="iconbutton"><span class="glyphicon glyphicon-tags"></span>
-    <span>HTML</span>
-    </button></a>
-<a href="msgRaw.jsp?msg=<%=URLEncoder.encode(selectedName)%>&mailType=inbox">
-    <button class="iconbutton"><span class="glyphicon glyphicon-list-alt"></span>
-    <span>Raw</span>
-    </button></a>
-<%} else if("outbox".equals(mailType)){ %>
-<a href="outbox.jsp">
-    <button class="iconbutton"><span class="glyphicon glyphicon-list"></span>
-    <span>Outbox List</span>
-    </button></a>
-<a href="newMail.jsp">
-    <button class="iconbutton"><span class="fa fa-newspaper-o" style="font-size:24px"></span>
-    <span>New Mail</span>
+<a href="list.jsp">
+    <button class="iconbutton"><span class="fa fa-remove" style="font-size:24px"></span>
+    <span>Cancel</span>
     </button></a>
 <span style="margin:20px"></span>
-<a href="msgHtml.jsp?msg=<%=URLEncoder.encode(selectedName)%>&mailType=outbox">
-    <button class="iconbutton"><span class="glyphicon glyphicon-font"></span>
-    <span>Normal</span>
+<a ng-click="sendMail()">
+    <button class="iconbutton"><span class="fa fa-send-o" style="font-size:24px"></span>
+    <span>Send</span>
     </button></a>
-<a href="msgTxt.jsp?msg=<%=URLEncoder.encode(selectedName)%>&mailType=outbox">
-    <button class="iconbutton"><span class="glyphicon glyphicon-tags"></span>
-    <span>HTML</span>
-    </button></a>
-<a href="msgRaw.jsp?msg=<%=URLEncoder.encode(selectedName)%>&mailType=outbox">
-    <button class="iconbutton"><span class="glyphicon glyphicon-list-alt"></span>
-    <span>Raw</span>
-    </button></a>
-<%} %>
 </div>
 
 <div class="msgmain">
-
 <%
     if (stringBody!=null) {
         HTMLWriter.writeHtmlWithLines(out,stringBody);
@@ -155,26 +146,23 @@ app.controller('myCtrl', function($scope, $http) {
         %>
 
         <table class="table">
-        <tr><td>From: </td><td> <%writeArray(out, mm.getFrom());%></td></tr>
-        <tr><td>To: </td><td> <%writeArray(out, mm.getAllRecipients());%></td></tr>
-        <tr><td>Date: </td><td> <%
-            if (mmSentDate==null) {
-                %><span style="color:red;">(missing from message)</span><%
-            }
-            else {
-                HTMLWriter.writeHtml(out, mmSentDate.toString());
-            }
-            %></td></tr>
-        <tr><td>Subject: </td><td> <%HTMLWriter.writeHtml(out, mm.getSubject());%></td></tr>
+        <tr><td><b>From:</b> </td><td><input type="text" ng-model="mailHeader.from" /></td></tr>
+        <tr><td><b>To:</b> </td><td><input type="text" ng-model="mailHeader.to" /></td></tr>       
+        <tr><td><b>Subject:</b> </td><td><input type="text" ng-model="mailHeader.subject" /></td></tr>
         </table>
         <%
         for (int i=0; i<mult.getCount(); i++) {
             BodyPart p = mult.getBodyPart(i);
             Object content2 = p.getContent();
-            %><div class="well" style="margin-top:15px">Part <%=(i+1)%> of <%=mult.getCount()%> </div>
-            <div class="emailbox"><%
+            %>           
+            <div class="msgmain" text-angular="text-angular" name="htmlcontent" ng-model="mailContent">            
+            __________________________________________________________________________________________________         
+            <%writeArray(out, "<b>From:</b>", mm.getFrom(), "<br>");%>
+            <%writeArray(out, "<b>To:</b>", mm.getAllRecipients(), "<br>");%>
+            <%HTMLWriter.writeHtml(out, "<b>Date:</b> "+mmSentDate.toString()+"<br>");%>
+            <%HTMLWriter.writeHtml(out, "<b>Subject:</b> "+mm.getSubject()+"<br><br>");%><%
             if (content2 instanceof String) {
-                out.write((String)content2);
+                out.write((String)content2); 
             }
             else {
                 out.write("Attachment: <a href=\"attachRaw.jsp?msg="+URLEncoder.encode(selectedName)+"&attach="+i+"\">");
@@ -190,17 +178,19 @@ app.controller('myCtrl', function($scope, $http) {
         }
     }
 %>
+
 </div>
 
+        
 <div style="height:100px"></div>
 </body>
 </html>
 
 <%!
 
-public void writeArray(Writer out, Address[] array) throws Exception  {
+public void writeArray(Writer out, String lable, Address[] array, String newline) throws Exception  {
     for (int i=0; i<array.length; i++) {
-        HTMLWriter.writeHtml(out, array[i].toString());
+        HTMLWriter.writeHtml(out, lable+" "+array[i].toString()+newline);
         out.write(" ");
     }
 }

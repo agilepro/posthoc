@@ -6,14 +6,24 @@
 
 
     <servlet>
-        <servlet-name>MailTester</servlet-name>
+        <servlet-name>MailSmtpTester</servlet-name>
         <servlet-class>com.purplehillsbooks.posthoc.PostHocServlet</servlet-class>
         <load-on-startup>5</load-on-startup>
     </servlet>
+    <servlet>
+        <servlet-name>MailPopTester</servlet-name>
+        <servlet-class>com.purplehillsbooks.posthoc.SendMailServlet</servlet-class>
+        <load-on-startup>3</load-on-startup>
+    </servlet>
     <servlet-mapping>
-        <servlet-name>MailTester</servlet-name>
+        <servlet-name>MailSmtpTester</servlet-name>
         <url-pattern>/servlet/*</url-pattern>
+    </servlet-mapping> 
+    <servlet-mapping>
+        <servlet-name>MailPopTester</servlet-name>
+        <url-pattern>/servlet/send</url-pattern>
     </servlet-mapping>
+
 
     
     <welcome-file-list>

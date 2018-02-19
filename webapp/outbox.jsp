@@ -4,14 +4,14 @@
 %><%@page import="java.util.List"
 %><%@page import="java.util.Date"
 %><%@page import="com.purplehillsbooks.posthoc.EmailModel"
-%><%@page import="com.purplehillsbooks.posthoc.MailListener"
+%><%@page import="com.purplehillsbooks.posthoc.SendMailListener"
 %><%@page import="com.purplehillsbooks.streams.HTMLWriter"
 %><%@page import="com.purplehillsbooks.json.JSONArray"
 %><%@page import="com.purplehillsbooks.json.JSONObject"
 %><%@page import="java.text.SimpleDateFormat"
 %><%
 
-    List<EmailModel> msgs = MailListener.listAllMessages();
+    List<EmailModel> msgs = SendMailListener.listAllOutboxMessages();
 
     SimpleDateFormat dFormat = new SimpleDateFormat("MMM dd - HH:mm:ss");
 
@@ -86,13 +86,10 @@ app.controller('myCtrl', function($scope, $http, $filter) {
         return $filter('date')(date, "h:mm:ss a");
     }
     $scope.go = function(row) {
-        var dest = "msgHtml.jsp?msg="+row.name+"&mailType=inbox";
+        var dest = "msgHtml.jsp?msg="+row.name+"&mailType=outbox";
         window.location = dest;
     }
-    $scope.reply = function(row) {
-        var dest = "reply.jsp?msg="+row.name;
-        window.location = dest;
-    }
+    
 });
 </script>
 <style>
@@ -111,27 +108,26 @@ tr:hover {
 <%@include file="ErrorPanel.jsp"%>
 
 <div class="msgmain">
-<a href="list.jsp">
-    <button class="iconbutton"><span class="glyphicon glyphicon-refresh"></span>
-    <span>Inbox</span>
-    </button></a>
 <a href="outbox.jsp">
-    <button class="iconbutton"><span class="fa fa-sign-out" style="font-size:24px"></span>
+    <button class="iconbutton"><span class="glyphicon glyphicon-refresh"></span>
     <span>Outbox</span>
+    </button></a>
+<a href="list.jsp">
+    <button class="iconbutton"><span class="fa fa-sign-in" style="font-size:24px"></span>
+    <span>Inbox</span>
     </button></a>
 <span style="margin:20px"></span>
 <a href="newMail.jsp">
     <button class="iconbutton"><span class="fa fa-newspaper-o" style="font-size:24px"></span>
     <span>New Mail</span>
     </button></a>
-
 </div>
 
 
 
 <div style="margin:20px">
 <table class="table" style="width:1050px">
-<col width="125">
+<col width="100">
 <col width="120">
 <col width="120">
 <col width="440">
@@ -149,8 +145,7 @@ tr:hover {
     <td>
     <span class="glyphicon glyphicon-font"  ng-click="go(row)"></span>&nbsp;
     <span class="glyphicon glyphicon-tags"  ng-click="go(row)"></span>&nbsp;
-    <span class="glyphicon glyphicon-list-alt"  ng-click="go(row)"></span>&nbsp;
-    <span class="glyphicon glyphicon-share-alt" ng-click="reply(row)"></span>
+    <span class="glyphicon glyphicon-list-alt"  ng-click="go(row)"></span>
     </td>
     <td>{{row.from}}</td>
     <td>{{niceDate(row.timestamp)}}</td>
@@ -163,9 +158,9 @@ tr:hover {
 
 <div class="well" style="margin:10px">
 <p>Total of <%=count%> messages.<br/>
-Message files are stored for <%= MailListener.storageDays %> days before discarding.</p>
+Message files are stored for <%= SendMailListener.storageDays %> days before discarding.</p>
 </div>
-<form action="/servlet/outbox"></form>
+
 </body>
 </html>
 

@@ -7,6 +7,7 @@
 %><%@page import="java.net.URLEncoder"
 %><%@page import="java.util.Date"
 %><%@page import="java.util.List"
+%><%@page import="java.util.ArrayList"
 %><%@page import="java.util.Properties"
 %><%@page import="javax.mail.Address"
 %><%@page import="javax.mail.BodyPart"
@@ -15,12 +16,18 @@
 %><%@page import="javax.mail.internet.MimeMessage"
 %><%@page import="com.purplehillsbooks.posthoc.EmailModel"
 %><%@page import="com.purplehillsbooks.posthoc.MailListener"
+%><%@page import="com.purplehillsbooks.posthoc.SendMailListener"
 %><%@page import="com.purplehillsbooks.streams.HTMLWriter"
 %><%@page import="com.purplehillsbooks.streams.MemFile"
 %><%
 
     String selectedName = request.getParameter("msg");
-    List<EmailModel> msgs = MailListener.listAllMessages();
+	String mailType = request.getParameter("mailType");
+	List<EmailModel> msgs= new ArrayList<EmailModel>();
+	if("inbox".equals(mailType))
+		msgs = MailListener.listAllMessages();
+	else if("outbox".equals(mailType))
+		msgs = SendMailListener.listAllOutboxMessages();   
     File foundMsg = null;
     for (EmailModel msgMod : msgs) {
         File msg = msgMod.filePath;
@@ -86,23 +93,51 @@ app.controller('myCtrl', function($scope, $http) {
 <%@include file="ErrorPanel.jsp"%>
 
 <div class="msgmain">
+<%if("inbox".equals(mailType)){ %>
 <a href="list.jsp">
     <button class="iconbutton"><span class="glyphicon glyphicon-list"></span>
-    <span>List</span>
+    <span>Inbox List</span>
+    </button></a>
+<a href="newMail.jsp">
+    <button class="iconbutton"><span class="fa fa-newspaper-o" style="font-size:24px"></span>
+    <span>New Mail</span>
     </button></a>
 <span style="margin:20px"></span>
-<a href="msgHtml.jsp?msg=<%=URLEncoder.encode(selectedName)%>">
+<a href="msgHtml.jsp?msg=<%=URLEncoder.encode(selectedName)%>&mailType=inbox">
     <button class="iconbutton"><span class="glyphicon glyphicon-font"></span>
     <span>Normal</span>
     </button></a>
-<a href="msgTxt.jsp?msg=<%=URLEncoder.encode(selectedName)%>">
+<a href="msgTxt.jsp?msg=<%=URLEncoder.encode(selectedName)%>&mailType=inbox">
     <button class="iconbutton"><span class="glyphicon glyphicon-tags"></span>
     <span>HTML</span>
     </button></a>
-<a href="msgRaw.jsp?msg=<%=URLEncoder.encode(selectedName)%>">
+<a href="msgRaw.jsp?msg=<%=URLEncoder.encode(selectedName)%>&mailType=inbox">
     <button class="iconbutton"><span class="glyphicon glyphicon-list-alt"></span>
     <span>Raw</span>
     </button></a>
+<%} else if("outbox".equals(mailType)){ %>
+<a href="outbox.jsp">
+    <button class="iconbutton"><span class="glyphicon glyphicon-list"></span>
+    <span>Outbox List</span>
+    </button></a>
+<a href="newMail.jsp">
+    <button class="iconbutton"><span class="fa fa-newspaper-o" style="font-size:24px"></span>
+    <span>New Mail</span>
+    </button></a>
+<span style="margin:20px"></span>
+<a href="msgHtml.jsp?msg=<%=URLEncoder.encode(selectedName)%>&mailType=outbox">
+    <button class="iconbutton"><span class="glyphicon glyphicon-font"></span>
+    <span>Normal</span>
+    </button></a>
+<a href="msgTxt.jsp?msg=<%=URLEncoder.encode(selectedName)%>&mailType=outbox">
+    <button class="iconbutton"><span class="glyphicon glyphicon-tags"></span>
+    <span>HTML</span>
+    </button></a>
+<a href="msgRaw.jsp?msg=<%=URLEncoder.encode(selectedName)%>&mailType=outbox">
+    <button class="iconbutton"><span class="glyphicon glyphicon-list-alt"></span>
+    <span>Raw</span>
+    </button></a>
+<%} %>
 </div>
 
 <div class="msgmain">
