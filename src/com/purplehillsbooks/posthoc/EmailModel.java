@@ -3,6 +3,7 @@ package com.purplehillsbooks.posthoc;
 import java.io.File;
 import java.io.FileInputStream;
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.Hashtable;
 import java.util.Properties;
 import java.util.Vector;
@@ -10,8 +11,6 @@ import java.util.Vector;
 import javax.mail.Address;
 import javax.mail.Session;
 import javax.mail.internet.MimeMessage;
-
-import java.util.Comparator;
 
 /**
  * A structure representing metadata about an email message file
@@ -51,6 +50,12 @@ public final class EmailModel {
     }
 
     public static Vector<EmailModel> getAllMessages(File containingFolder) throws Exception {
+        if (containingFolder==null) {
+            throw new Exception("getAllMessages needs a containing folder parameter, got null");
+        }
+        if (!containingFolder.exists()) {
+            throw new Exception("getAllMessages needs a containing folder that exists");
+        }
         Vector<EmailModel> ret = new Vector<EmailModel>();
         for (File existingFile : containingFolder.listFiles()) {
             if (properFilename(existingFile.getName())) {
