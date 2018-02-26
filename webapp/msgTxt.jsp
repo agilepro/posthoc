@@ -18,6 +18,7 @@
 %><%@page import="com.purplehillsbooks.posthoc.MailListener"
 %><%@page import="com.purplehillsbooks.posthoc.SendMailListener"
 %><%@page import="com.purplehillsbooks.streams.HTMLWriter"
+%><%@page import="com.purplehillsbooks.streams.JavaScriptWriter"
 %><%@page import="com.purplehillsbooks.streams.MemFile"
 %><%
 
@@ -75,6 +76,8 @@ var app = angular.module('myApp', []);
 app.controller('myCtrl', function($scope, $http) {
     $scope.msg = {};
     $scope.mode = "Message Text";
+    $scope.mailType = "<%JavaScriptWriter.encode(out, mailType);%>";
+    $scope.selectedName = "<%JavaScriptWriter.encode(out, selectedName);%>";
 
     $scope.showError = false;
     $scope.errorMsg = "";
@@ -85,6 +88,14 @@ app.controller('myCtrl', function($scope, $http) {
     };
 
 });
+app.filter('escape', function() {
+    return function(input) {
+        if(input) {
+            return window.encodeURIComponent(input); 
+        }
+        return "";
+    }
+});
 </script>
 </head>
 
@@ -93,51 +104,34 @@ app.controller('myCtrl', function($scope, $http) {
 <%@include file="ErrorPanel.jsp"%>
 
 <div class="msgmain">
-<%if("inbox".equals(mailType)){ %>
-<a href="list.jsp">
+
+<a href="list.jsp" ng-show="'inbox'==mailType">
     <button class="iconbutton"><span class="glyphicon glyphicon-list"></span>
     <span>Inbox List</span>
     </button></a>
-<a href="newMail.jsp">
+<a href="reply.jsp?msg={{selectedName|escape}}" ng-show="'inbox'==mailType">
     <button class="iconbutton"><span class="fa fa-newspaper-o" style="font-size:24px"></span>
-    <span>New Mail</span>
+    <span>Create Reply</span>
     </button></a>
-<span style="margin:20px"></span>
-<a href="msgHtml.jsp?msg=<%=URLEncoder.encode(selectedName)%>&mailType=inbox">
-    <button class="iconbutton"><span class="glyphicon glyphicon-font"></span>
-    <span>Normal</span>
-    </button></a>
-<a href="msgTxt.jsp?msg=<%=URLEncoder.encode(selectedName)%>&mailType=inbox">
-    <button class="iconbutton"><span class="glyphicon glyphicon-tags"></span>
-    <span>HTML</span>
-    </button></a>
-<a href="msgRaw.jsp?msg=<%=URLEncoder.encode(selectedName)%>&mailType=inbox">
-    <button class="iconbutton"><span class="glyphicon glyphicon-list-alt"></span>
-    <span>Raw</span>
-    </button></a>
-<%} else if("outbox".equals(mailType)){ %>
-<a href="outbox.jsp">
+<a href="outbox.jsp" ng-show="'outbox'==mailType">
     <button class="iconbutton"><span class="glyphicon glyphicon-list"></span>
     <span>Outbox List</span>
     </button></a>
-<a href="newMail.jsp">
-    <button class="iconbutton"><span class="fa fa-newspaper-o" style="font-size:24px"></span>
-    <span>New Mail</span>
-    </button></a>
+
+
 <span style="margin:20px"></span>
-<a href="msgHtml.jsp?msg=<%=URLEncoder.encode(selectedName)%>&mailType=outbox">
+<a href="msgHtml.jsp?msg={{selectedName|escape}}&mailType={{mailType|escape}}">
     <button class="iconbutton"><span class="glyphicon glyphicon-font"></span>
     <span>Normal</span>
     </button></a>
-<a href="msgTxt.jsp?msg=<%=URLEncoder.encode(selectedName)%>&mailType=outbox">
+<a href="msgTxt.jsp?msg={{selectedName|escape}}&mailType={{mailType|escape}}">
     <button class="iconbutton"><span class="glyphicon glyphicon-tags"></span>
     <span>HTML</span>
     </button></a>
-<a href="msgRaw.jsp?msg=<%=URLEncoder.encode(selectedName)%>&mailType=outbox">
+<a href="msgRaw.jsp?msg={{selectedName|escape}}&mailType={{mailType|escape}}">
     <button class="iconbutton"><span class="glyphicon glyphicon-list-alt"></span>
     <span>Raw</span>
     </button></a>
-<%} %>
 </div>
 
 <div class="msgmain">

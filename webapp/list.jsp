@@ -63,7 +63,7 @@
 var app = angular.module('myApp', []);
 app.controller('myCtrl', function($scope, $http, $filter) {
     $scope.allMail = <% allMail.write(out, 2, 2); %>;
-    $scope.mode = "List Messages";
+    $scope.mode = "List Inbox";
     $scope.nowTime = new Date().getTime();
 
     $scope.showError = false;
@@ -122,7 +122,7 @@ tr:hover {
 <span style="margin:20px"></span>
 <a href="newMail.jsp">
     <button class="iconbutton"><span class="fa fa-newspaper-o" style="font-size:24px"></span>
-    <span>New Mail</span>
+    <span>Create Outbox Mail</span>
     </button></a>
 
 </div>
@@ -145,12 +145,11 @@ tr:hover {
     <th>To</th>
     </tr>
 
-    <tr ng-repeat="row in allMail">
+    <tr ng-repeat="row in allMail" ng-click="go(row)">
     <td>
-    <span class="glyphicon glyphicon-font"  ng-click="go(row)"></span>&nbsp;
-    <span class="glyphicon glyphicon-tags"  ng-click="go(row)"></span>&nbsp;
-    <span class="glyphicon glyphicon-list-alt"  ng-click="go(row)"></span>&nbsp;
-    <span class="glyphicon glyphicon-share-alt" ng-click="reply(row)"></span>
+    <span class="glyphicon glyphicon-font"></span>&nbsp;
+    <span class="glyphicon glyphicon-tags"></span>&nbsp;
+    <span class="glyphicon glyphicon-list-alt"></span>
     </td>
     <td>{{row.from}}</td>
     <td>{{niceDate(row.timestamp)}}</td>

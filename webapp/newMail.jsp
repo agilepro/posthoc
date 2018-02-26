@@ -9,7 +9,7 @@
 var app = angular.module('myApp', ['textAngular']);
 app.controller('myCtrl', ['$scope', '$http', '$window', 'textAngularManager', function myCtrl($scope, $http, $window, textAngularManager) {
     $scope.msg = {};
-    $scope.mode = "Message";
+    $scope.mode = "Create Mail";
 
     $scope.showError = false;
     $scope.errorMsg = "";
@@ -42,7 +42,7 @@ app.controller('myCtrl', ['$scope', '$http', '$window', 'textAngularManager', fu
             $scope.message = response.data;
             if($scope.message ==='Status : Mail sent succesfully'){
             	var res = $window.location.pathname.split("/");
-            	var url = "http://" + $window.location.host + "/" + res[1] + "/list.jsp";
+            	var url = "http://" + $window.location.host + "/" + res[1] + "/outbox.jsp";
                 $window.location.href = url;
         	}
         }, function(response) {
@@ -60,10 +60,6 @@ app.controller('myCtrl', ['$scope', '$http', '$window', 'textAngularManager', fu
 <%@include file="ErrorPanel.jsp"%>
 
 <div class="msgmain">
-<a href="list.jsp">
-    <button class="iconbutton"><span class="fa fa-sign-in" style="font-size:24px"></span>
-    <span>Inbox</span>
-    </button></a>
 <a href="list.jsp">
     <button class="iconbutton"><span class="fa fa-remove" style="font-size:24px"></span>
     <span>Cancel</span>

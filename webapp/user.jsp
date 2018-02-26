@@ -38,13 +38,17 @@ app.controller('myCtrl', function($scope, $http) {
       <div class="modal-body">
         <p>There are no user settings for Post Hoc.</p>
         <p>There is no need to log in or out of Post Hoc.</p>
-        <p>All email messages to Post Hoc are displayed in a single list showing
+        <p>All email messages sent to Post Hoc (via SMTP) are displayed 
+           in a single list called 'Inbox' showing
            the message subject, whom it was from, whom it is to, and the date of delivery.
            Post Hoc looks to an application like a normal email server, except that
            all messages are equally accessible to everyone, without having to log in, and
            without ever having to change users.</p>
-        <p>This is quite useful
-           for demonstrations and testing in order to see all of the email produced by an application,
+        <p>All messages created in PostHoc to be picked up (using POP) are in another 
+           list called 'Outbox'.
+        <p>PostHoc is quite useful for demonstrations and testing 
+           in order to see all of the email produced by an application,
+           and to create email to be picked up by an application,
            and to keep email from ever escaping into the real world.
            Clearly Post Hoc is not intended for real production email use.</p>
       </div>
