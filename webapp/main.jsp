@@ -37,11 +37,11 @@ app.controller('myCtrl', function($scope, $http) {
         <h4 class="modal-title">Server Status</h4>
       </div>
       <div class="modal-body">
-<% if (PostHocServlet.kmc!=null) { %>
+<% if (PostHocServlet.phConfig!=null) { %>
         <p>You can send email to this server with the following settings:</p>
         <ul>
-        <li>host:  <% HTMLWriter.writeHtml(out, PostHocServlet.kmc.hostName ); %></li>
-        <li>port:  <%=PostHocServlet.kmc.hostPort%></li>
+        <li>host:  <% HTMLWriter.writeHtml(out, PostHocServlet.phConfig.hostName ); %></li>
+        <li>port:  <%=PostHocServlet.phConfig.hostPort%></li>
         </ul>
         <p>Message files will be stored for <%= MailListener.storageDays %> days in the folder:
         <tt><% HTMLWriter.writeHtml(out, PostHocServlet.getDataFolder().toString() ); %></tt></p>
@@ -49,7 +49,7 @@ app.controller('myCtrl', function($scope, $http) {
         <p><a href="delete.jsp?check=yes">
             <button type="button" class="btn btn-danger">Delete All Mail</button>
             </a></p>
-        <p>Running build version: <% HTMLWriter.writeHtml(out, PostHocServlet.kmc.buildNumber ); %></p>
+        <p>Running build version: <% HTMLWriter.writeHtml(out, PostHocServlet.phConfig.buildNumber ); %></p>
 <% } else { %>
         <p>Server configuration problem: </p>
         <ul><%
