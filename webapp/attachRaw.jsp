@@ -5,12 +5,15 @@
 %><%@page import="java.io.InputStream"
 %><%@page import="java.io.InputStreamReader"
 %><%@page import="java.util.List"
+%><%@page import="java.util.ArrayList"
 %><%@page import="java.util.Properties"
 %><%@page import="javax.mail.BodyPart"
 %><%@page import="javax.mail.Multipart"
 %><%@page import="javax.mail.Session"
+%><%@page import="com.purplehillsbooks.posthoc.EmailModel"
 %><%@page import="javax.mail.internet.MimeMessage"
 %><%@page import="com.purplehillsbooks.posthoc.MailListener"
+%><%@page import="com.purplehillsbooks.posthoc.SendMailListener"
 %><%@page import="com.purplehillsbooks.streams.HTMLWriter"
 %><%
 
@@ -19,11 +22,16 @@
 
     String selectedName = request.getParameter("msg");
     String selectedAttach = request.getParameter("attach");
-    List<EmailModel> msgs = MailListener.listAllMessages();
+    String mailType = request.getParameter("mailType");
+    List<EmailModel> msgs= new ArrayList<EmailModel>();
+    if("inbox".equals(mailType))
+    	msgs = MailListener.listAllMessages();
+    else if("outbox".equals(mailType))
+    	msgs = SendMailListener.listAllOutboxMessages();   
     File foundMsg = null;
     for (EmailModel msgMod : msgs) {
-        File msg = msgMod.filePath;
-        String name = msg.getName();
+        File msg = msgMod.filePath;       
+        String name = msg.getName();       
         if (selectedName.equals(name)) {
             foundMsg = msg;
         }

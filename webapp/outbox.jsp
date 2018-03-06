@@ -143,7 +143,7 @@ tr:hover {
 
     <tr ng-repeat="row in allMail" ng-click="go(row)">
     <td>
-    <span class="glyphicon glyphicon-font"></span>&nbsp;
+   	<span class="glyphicon glyphicon-font"></span>&nbsp;
     <span class="glyphicon glyphicon-tags"></span>&nbsp;
     <span class="glyphicon glyphicon-list-alt"></span>
     </td>

@@ -12,7 +12,7 @@ import javax.servlet.http.HttpServletResponse;
 public class PostHocServlet extends javax.servlet.http.HttpServlet {
 
     private static final long serialVersionUID = 1L;
-    private static File dataFolder;
+    private static File dataFolder;    
     public static PostHocConfig phConfig;
     public static Exception fatalServerError;
 
@@ -23,31 +23,39 @@ public class PostHocServlet extends javax.servlet.http.HttpServlet {
 
     @Override
     public void init(ServletConfig config) throws ServletException {
-        try {
-            System.out.println("PostHoc Servlet: Server starting");
-            ServletContext sc = config.getServletContext();
-            File contextPath = new File(sc.getRealPath("/"));
-            phConfig = new PostHocConfig(contextPath);
+    	initializeMailServices(config);
+    }
+    
+    public void initializeMailServices(ServletConfig config){
+    	 try {
+             System.out.println("PostHoc Servlet: Server starting");
+             ServletContext sc = config.getServletContext();
+             File contextPath = new File(sc.getRealPath("/"));
+             phConfig = new PostHocConfig(contextPath);
 
-            dataFolder = phConfig.dataFolder;
-            InetAddress bindAddress = InetAddress.getByName(phConfig.hostName);
-            SMTPServerHandler.startServer(phConfig.hostPort, bindAddress);
-            System.out.println("PostHocServlet: Server started on "+phConfig.hostName+":"+phConfig.hostPort);
-            System.out.println("PostHocServlet: Server saving data in: "+dataFolder);
+             dataFolder = phConfig.dataFolder;             
+             InetAddress bindAddress = InetAddress.getByName(phConfig.hostName);
             
-            POPServer.startListening(phConfig);
-        }
-        catch (Exception e) {
-            fatalServerError = e;
-            System.out.println("PostHocServlet: crash on initialization:");
-            Throwable t = e;
-            int count = 0;
-            while (t!=null) {
-                System.out.println("    "+(++count)+": "+t.toString());
-                t = t.getCause();
-            }
-            e.printStackTrace();
-        }
+             if(SMTPServerHandler.getSmtpServer() == null)
+            	 SMTPServerHandler.startServer(phConfig.hostPort, bindAddress);
+             System.out.println("PostHocServlet: Server started on "+phConfig.hostName+":"+phConfig.hostPort);
+             System.out.println("PostHocServlet: Server saving data in: "+dataFolder);
+             
+             if(POPServer.theOneBigPopServer == null)
+            	 POPServer.startListening(phConfig);
+             
+         }
+         catch (Exception e) {
+             fatalServerError = e;
+             System.out.println("PostHocServlet: crash on initialization:");
+             Throwable t = e;
+             int count = 0;
+             while (t!=null) {
+                 System.out.println("    "+(++count)+": "+t.toString());
+                 t = t.getCause();
+             }            
+             e.printStackTrace();
+         }
     }
     
     public static File getDataFolder() throws Exception {
@@ -59,5 +67,11 @@ public class PostHocServlet extends javax.servlet.http.HttpServlet {
         }
         return dataFolder;
     }
+    
+    public static File getOutBoxFolder() throws Exception {
+       
+        return new File(getDataFolder(), "outbox");
+    }
 
 }
+

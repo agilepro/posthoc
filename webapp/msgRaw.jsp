@@ -49,9 +49,9 @@ var app = angular.module('myApp', []);
 app.controller('myCtrl', function($scope, $http) {
     $scope.msg = {};
     $scope.mode = "Message Raw";
+	
     $scope.mailType = "<%JavaScriptWriter.encode(out, mailType);%>";
     $scope.selectedName = "<%JavaScriptWriter.encode(out, selectedName);%>";
-
     $scope.showError = false;
     $scope.errorMsg = "";
     $scope.errorTrace = "";
@@ -77,7 +77,6 @@ app.filter('escape', function() {
 <%@include file="ErrorPanel.jsp"%>
 
 <div class="msgmain">
-
 <a href="list.jsp" ng-show="'inbox'==mailType">
     <button class="iconbutton"><span class="glyphicon glyphicon-list"></span>
     <span>Inbox List</span>
@@ -90,8 +89,6 @@ app.filter('escape', function() {
     <button class="iconbutton"><span class="glyphicon glyphicon-list"></span>
     <span>Outbox List</span>
     </button></a>
-
-
 <span style="margin:20px"></span>
 <a href="msgHtml.jsp?msg={{selectedName|escape}}&mailType={{mailType|escape}}">
     <button class="iconbutton"><span class="glyphicon glyphicon-font"></span>

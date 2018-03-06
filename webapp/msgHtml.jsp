@@ -68,7 +68,6 @@
 
     Date mmSentDate = mm.getSentDate();
 
-
 %><!DOCTYPE html>
 <html>
 <head>
@@ -80,9 +79,9 @@ var app = angular.module('myApp', []);
 app.controller('myCtrl', function($scope, $http) {
     $scope.msg = {};
     $scope.mode = "Message";
+	
     $scope.mailType = "<%JavaScriptWriter.encode(out, mailType);%>";
     $scope.selectedName = "<%JavaScriptWriter.encode(out, selectedName);%>";
-
     $scope.showError = false;
     $scope.errorMsg = "";
     $scope.errorTrace = "";
@@ -90,7 +89,7 @@ app.controller('myCtrl', function($scope, $http) {
     $scope.reportError = function(serverErr) {
         errorPanelHandler($scope, serverErr);
     };
-
+    	
 });
 app.filter('escape', function() {
     return function(input) {
@@ -108,24 +107,21 @@ app.filter('escape', function() {
 <%@include file="ErrorPanel.jsp"%>
 
 <div class="msgmain">
-
 <a href="list.jsp" ng-show="'inbox'==mailType">
     <button class="iconbutton"><span class="glyphicon glyphicon-list"></span>
     <span>Inbox List</span>
     </button></a>
 <a href="reply.jsp?msg={{selectedName|escape}}" ng-show="'inbox'==mailType">
-    <button class="iconbutton"><span class="fa fa-newspaper-o" style="font-size:24px"></span>
-    <span>Create Reply</span>
-    </button></a>
+	<button class="iconbutton"><span class="fa fa-newspaper-o" style="font-size:24px"></span>
+	<span>Create Reply</span>
+	    </button></a>
 <a href="outbox.jsp" ng-show="'outbox'==mailType">
-    <button class="iconbutton"><span class="glyphicon glyphicon-list"></span>
-    <span>Outbox List</span>
+	<button class="iconbutton"><span class="glyphicon glyphicon-list"></span>
+	    <span>Outbox List</span>
     </button></a>
-
-
 <span style="margin:20px"></span>
 <a href="msgHtml.jsp?msg={{selectedName|escape}}&mailType={{mailType|escape}}">
-    <button class="iconbutton"><span class="glyphicon glyphicon-font"></span>
+ <button class="iconbutton"><span class="glyphicon glyphicon-font"></span>
     <span>Normal</span>
     </button></a>
 <a href="msgTxt.jsp?msg={{selectedName|escape}}&mailType={{mailType|escape}}">
@@ -171,7 +167,7 @@ app.filter('escape', function() {
                 out.write((String)content2);
             }
             else {
-                out.write("Attachment: <a href=\"attachRaw.jsp?msg="+URLEncoder.encode(selectedName)+"&attach="+i+"\">");
+                out.write("Attachment: <a href=\"attachRaw.jsp?msg="+URLEncoder.encode(selectedName)+"&mailType="+mailType+"&attach="+i+"\">");
                 HTMLWriter.writeHtml(out, p.getFileName());
                 out.write("</a>");
                 if (p.getDescription()!=null) {
@@ -187,6 +183,7 @@ app.filter('escape', function() {
 </div>
 
 <div style="height:100px"></div>
+
 </body>
 </html>
 

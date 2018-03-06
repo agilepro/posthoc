@@ -7,6 +7,19 @@
 <script type="text/javascript">
 
 var app = angular.module('myApp', ['textAngular']);
+app.directive('ngFiles', ['$parse', function ($parse) {
+
+    function fn_link(scope, element, attrs) {
+        var onChange = $parse(attrs.ngFiles);
+        element.on('change', function (event) {
+            onChange(scope, { $files: event.target.files });
+        });
+    };
+
+    return {
+        link: fn_link
+    }
+} ])
 app.controller('myCtrl', ['$scope', '$http', '$window', 'textAngularManager', function myCtrl($scope, $http, $window, textAngularManager) {
     $scope.msg = {};
     $scope.mode = "Create Mail";
@@ -19,28 +32,45 @@ app.controller('myCtrl', ['$scope', '$http', '$window', 'textAngularManager', fu
         errorPanelHandler($scope, serverErr);
     };
     
+    $scope.files = []; 
+    $scope.getTheFiles = function ($files) {
+        angular.forEach($files, function (value, key) {
+        	$scope.files.push(value);
+        });
+    };
+    
     $scope.mailHeader = {
     		'from' : '',
             'to' :  '',
             'subject' :  '',
             'mailType': ''
     };
-   
+    
     $scope.sendMail = function() {
+    	$scope.jsonData = {
+	    			'from' :  $scope.mailHeader.from,
+		            'to' :  $scope.mailHeader.to,
+		            'subject' :  $scope.mailHeader.subject,
+		            'mailContent' :  $scope.mailContent,
+		            'mailType': $scope.mailHeader.mailType 
+	            };
         $http({
             url : 'servlet/send',
             method : "POST",
-            data : {
-                'from' :  $scope.mailHeader.from,
-                'to' :  $scope.mailHeader.to,
-                'subject' :  $scope.mailHeader.subject,
-                'mailContent' :  $scope.mailContent,
-                'mailType': $scope.mailHeader.mailType
-            }
+            headers: { 'Content-Type': undefined },              
+            transformRequest: function (data) {  
+                var formData = new FormData();  
+                formData.append("model", angular.toJson(data.model));  
+                for (var i = 0; i < data.files.length; i++) {  
+                    formData.append("file" + i, data.files[i]);  
+                }  
+                return formData;  
+            },  
+            data: { model: $scope.jsonData, files: $scope.files } 
         }).then(function(response) {
             console.log(response.data);
             $scope.message = response.data;
-            if($scope.message ==='Status : Mail sent succesfully'){
+            if($scope.message ==='Status : email message stored in POP message box'){
             	var res = $window.location.pathname.split("/");
             	var url = "http://" + $window.location.host + "/" + res[1] + "/outbox.jsp";
                 $window.location.href = url;
@@ -77,14 +107,11 @@ app.controller('myCtrl', ['$scope', '$http', '$window', 'textAngularManager', fu
         <tr><td><b>From:</b> </td><td><input type="text" ng-model="mailHeader.from" /></td></tr>
         <tr><td><b>To:</b> </td><td><input type="text" ng-model="mailHeader.to" /></td></tr>       
         <tr><td><b>Subject:</b> </td><td><input type="text" ng-model="mailHeader.subject" /></td></tr>
+        <tr><td>Attachment:</td><td><input type="file" id="file1" name="file" multiple
+            ng-files="getTheFiles($files)" /></td></tr>
         </table>
-            
-            <div class="msgmain" text-angular="text-angular" name="htmlcontent" ng-model="mailContent">            
-            </div>
-
+         <div class="msgmain" text-angular="text-angular" name="htmlcontent" ng-model="mailContent"></div>
 </div>
-
-        
 <div style="height:100px"></div>
 </body>
 </html>
