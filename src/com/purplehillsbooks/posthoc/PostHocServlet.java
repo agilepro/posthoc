@@ -68,9 +68,29 @@ public class PostHocServlet extends javax.servlet.http.HttpServlet {
         return dataFolder;
     }
     
+    /**
+     * Returns outbox directory path 
+     */
     public static File getOutBoxFolder() throws Exception {
        
-        return new File(getDataFolder(), "outbox");
+        return new File(createOutbox(getDataFolder()+"/outbox"));
+    }
+    
+    /**
+     * Create outbox Directory if it does not exist
+     */
+    private static String createOutbox(String dirPAth) throws Exception{
+    	File theOutboxDir = new File(dirPAth);
+    	
+    	if (!theOutboxDir.exists()) {    	    
+    	    try{
+    	    	theOutboxDir.mkdir();      	        
+    	    } 
+    	    catch(SecurityException se){
+    	    	throw new Exception("Outbox Directory not created ",se);
+    	    }
+    	}
+    	return dirPAth;
     }
 
 }
