@@ -9,13 +9,13 @@
             <a class="brand" href="list.jsp"><b>Post Hoc</b> - {{mode}}</a>
            <div class="nav-collapse navbar-responsive-collapse">
               <ul class="nav">
-                <li ><a href="list.jsp">Home</a></li>
                 <li class="dropdown">
                   <a href="#" class="dropdown-toggle" data-toggle="dropdown">Options <b class="caret"></b></a>
                   <ul class="dropdown-menu">
                     <li><a href="main.jsp">Server Status</a></li>
-                    <li class="divider"></li>
-                    <li><a href="list.jsp">List All Mail</a></li>
+                    <li><a href="list.jsp">List Inbox</a></li>
+                    <li><a href="outbox.jsp">List Outbox</a></li>
+                    <li><a href="newMail.jsp">Compose Outbound Mail</a></li>
                   </ul>
                 </li>
               </ul>

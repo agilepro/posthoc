@@ -154,4 +154,17 @@ public class SendMailListener {
     }
 	
 
+    /**
+     * Deletes all sent emails from file system.
+     */
+    public static void deleteOutboxEmails() throws Exception {
+        File[] children = PostHocServlet.getOutBoxFolder().listFiles();
+        for (File child : children) {
+            String name = child.getName();
+            if (name.startsWith("email") && name.endsWith(".msg")) {
+                child.delete();
+            }
+        }
+    }
+    
 }

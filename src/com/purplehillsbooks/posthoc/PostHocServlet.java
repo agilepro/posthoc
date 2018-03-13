@@ -23,27 +23,25 @@ public class PostHocServlet extends javax.servlet.http.HttpServlet {
 
     @Override
     public void init(ServletConfig config) throws ServletException {
-    	initializeMailServices(config);
-    }
-    
-    public void initializeMailServices(ServletConfig config){
     	 try {
-             System.out.println("PostHoc Servlet: Server starting");
-             ServletContext sc = config.getServletContext();
-             File contextPath = new File(sc.getRealPath("/"));
-             phConfig = new PostHocConfig(contextPath);
-
-             dataFolder = phConfig.dataFolder;             
-             InetAddress bindAddress = InetAddress.getByName(phConfig.hostName);
-            
-             if(SMTPServerHandler.getSmtpServer() == null)
-            	 SMTPServerHandler.startServer(phConfig.hostPort, bindAddress);
-             System.out.println("PostHocServlet: Server started on "+phConfig.hostName+":"+phConfig.hostPort);
-             System.out.println("PostHocServlet: Server saving data in: "+dataFolder);
-             
-             if(POPServer.theOneBigPopServer == null)
-            	 POPServer.startListening(phConfig);
-             
+    		 //For first time phConfig will be null
+    		 //second time phConfig will have value c:/opt/PostHocData/
+             if(phConfig == null){            	 
+            	 System.out.println("PostHoc Servlet1: Server starting");
+ 
+	             ServletContext sc = config.getServletContext();
+	             File contextPath = new File(sc.getRealPath("/"));
+	             phConfig = new PostHocConfig(contextPath);
+ 
+	             dataFolder = phConfig.dataFolder;
+	             InetAddress bindAddress = InetAddress.getByName(phConfig.hostName);
+ 
+	             SMTPServerHandler.startServer(phConfig.hostPort, bindAddress);
+	             System.out.println("PostHocServlet1: Server started on "+phConfig.hostName+":"+phConfig.hostPort);
+	             System.out.println("PostHocServlet1: Server saving data in: "+dataFolder);
+ 
+	             POPServer.startListening(phConfig);
+             } 
          }
          catch (Exception e) {
              fatalServerError = e;
@@ -56,7 +54,8 @@ public class PostHocServlet extends javax.servlet.http.HttpServlet {
              }            
              e.printStackTrace();
          }
-    }
+    } 
+    
     
     public static File getDataFolder() throws Exception {
         if (fatalServerError!=null) {
@@ -73,14 +72,13 @@ public class PostHocServlet extends javax.servlet.http.HttpServlet {
      */
     public static File getOutBoxFolder() throws Exception {
        
-        return new File(createOutbox(getDataFolder()+"/outbox"));
+        return createOutbox(new File(getDataFolder(), "outbox"));
     }
     
     /**
      * Create outbox Directory if it does not exist
      */
-    private static String createOutbox(String dirPAth) throws Exception{
-    	File theOutboxDir = new File(dirPAth);
+    private static File createOutbox(File theOutboxDir) throws Exception{    	
     	
     	if (!theOutboxDir.exists()) {    	    
     	    try{
@@ -90,7 +88,7 @@ public class PostHocServlet extends javax.servlet.http.HttpServlet {
     	    	throw new Exception("Outbox Directory not created ",se);
     	    }
     	}
-    	return dirPAth;
+    	return theOutboxDir;
     }
 
 }

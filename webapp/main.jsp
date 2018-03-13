@@ -40,8 +40,9 @@ app.controller('myCtrl', function($scope, $http) {
 <% if (PostHocServlet.phConfig!=null) { %>
         <p>You can send email to this server with the following settings:</p>
         <ul>
-        <li>host:  <% HTMLWriter.writeHtml(out, PostHocServlet.phConfig.hostName ); %></li>
-        <li>port:  <%=PostHocServlet.phConfig.hostPort%></li>
+        <li>host     :  <% HTMLWriter.writeHtml(out, PostHocServlet.phConfig.hostName ); %></li>
+        <li>port [SMTP] :  <%=PostHocServlet.phConfig.hostPort%></li>
+        <li>port [POP] :  <%=PostHocServlet.phConfig.popPort%></li>
         </ul>
         <p>Message files will be stored for <%= MailListener.storageDays %> days in the folder:
         <tt><% HTMLWriter.writeHtml(out, PostHocServlet.getDataFolder().toString() ); %></tt></p>

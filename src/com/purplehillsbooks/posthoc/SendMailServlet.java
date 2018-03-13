@@ -19,16 +19,16 @@ import com.purplehillsbooks.json.JSONTokener;
 public class SendMailServlet extends javax.servlet.http.HttpServlet {
 	
 	private static final long serialVersionUID = 1L;
-	public static PostHocConfig phConfig;
 	public static Exception fatalServerError;
     int counter;
-
+/*
 	@Override
 	public void init(ServletConfig config) throws ServletException {
-		PostHocServlet postHocServlet= new PostHocServlet();
-		postHocServlet.initializeMailServices(config);
+        //PostHocServlet postHocServlet= new PostHocServlet();
+        //postHocServlet.initializeMailServices(config);
+        super.init(config);
 	}
-
+*/
 	@Override
 	public void doGet(HttpServletRequest req, HttpServletResponse resp) {
 		//do nothing
