@@ -27,7 +27,7 @@ public class PostHocServlet extends javax.servlet.http.HttpServlet {
     		 //For first time phConfig will be null
     		 //second time phConfig will have value c:/opt/PostHocData/
              if(phConfig == null){            	 
-            	 System.out.println("PostHoc Servlet1: Server starting");
+            	 System.out.println("PostHoc Servlet: Server starting");
  
 	             ServletContext sc = config.getServletContext();
 	             File contextPath = new File(sc.getRealPath("/"));
@@ -37,8 +37,8 @@ public class PostHocServlet extends javax.servlet.http.HttpServlet {
 	             InetAddress bindAddress = InetAddress.getByName(phConfig.hostName);
  
 	             SMTPServerHandler.startServer(phConfig.hostPort, bindAddress);
-	             System.out.println("PostHocServlet1: Server started on "+phConfig.hostName+":"+phConfig.hostPort);
-	             System.out.println("PostHocServlet1: Server saving data in: "+dataFolder);
+	             System.out.println("PostHocServlet: Server started on "+phConfig.hostName+":"+phConfig.hostPort);
+	             System.out.println("PostHocServlet: Server saving data in: "+dataFolder);
  
 	             POPServer.startListening(phConfig);
              } 

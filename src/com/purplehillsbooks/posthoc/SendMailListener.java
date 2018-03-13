@@ -77,7 +77,7 @@ public class SendMailListener {
     
     private static Multipart getAttachement(Multipart multipart, List<FileItem> attachments) throws Exception{
     	for(FileItem file : attachments) {
-    		File newfile = new File(createTemp(PostHocServlet.getOutBoxFolder()+"/temp"), file.getName());
+    		File newfile = new File(createTemp(new File(PostHocServlet.getOutBoxFolder(),"/temp")), file.getName());
     		file.write(newfile);
             MimeBodyPart attachment = new MimeBodyPart();
             DataSource source = new FileDataSource(newfile);
@@ -88,19 +88,18 @@ public class SendMailListener {
     	return multipart;
     }
     
-    private static String createTemp(String dirPAth) throws Exception{
-    	File theDir = new File(dirPAth);
+    private static File createTemp(File dirPath) throws Exception{
     	
-    	if (!theDir.exists()) {    	    
+    	if (!dirPath.exists()) {    	    
     	    try{
-    	        theDir.mkdir();      	        
+    	    	dirPath.mkdir();      	        
     	    } 
     	    catch(SecurityException se){
     	    	throw new Exception("Temp Directory not created ",se);
     	    }
     	}else
-    		cleanupTemp(theDir);
-    	return dirPAth;
+    		cleanupTemp(dirPath);
+    	return dirPath;
     }
     
     private static void cleanupTemp(File filePath){
