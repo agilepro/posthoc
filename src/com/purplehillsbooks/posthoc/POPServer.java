@@ -200,7 +200,7 @@ public class POPServer extends Thread {
             return;
         }
         File child = children[msgNo-1];
-        //child.delete();
+        child.delete();
         w.write("+OK message deleted\r\n");
     }
     

@@ -112,7 +112,7 @@ tr:hover {
 
 <div class="msgmain">
 <a href="list.jsp">
-    <button class="iconbutton"><span class="glyphicon glyphicon-refresh"></span>
+    <button class="iconbutton-special"><span class="fa fa-refresh" style="font-size:24px"></span>
     <span>Inbox</span>
     </button></a>
 <a href="outbox.jsp">

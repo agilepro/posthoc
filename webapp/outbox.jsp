@@ -108,13 +108,13 @@ tr:hover {
 <%@include file="ErrorPanel.jsp"%>
 
 <div class="msgmain">
-<a href="outbox.jsp">
-    <button class="iconbutton"><span class="glyphicon glyphicon-refresh"></span>
-    <span>Outbox</span>
-    </button></a>
 <a href="list.jsp">
     <button class="iconbutton"><span class="fa fa-sign-in" style="font-size:24px"></span>
     <span>Inbox</span>
+    </button></a>
+<a href="outbox.jsp">
+    <button class="iconbutton-special"><span class="fa fa-refresh" style="font-size:24px"></span>
+    <span>Outbox</span>
     </button></a>
 <span style="margin:20px"></span>
 <a href="newMail.jsp">

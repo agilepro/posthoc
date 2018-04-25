@@ -34,7 +34,15 @@ td {
     margin-left:3px;
     margin-right:3px;
 }
-
+.iconbutton-special {
+    font-size:130%;
+    color:green;
+    padding:5px;
+    padding-left:15px;
+    padding-right:15px;
+    margin-left:3px;
+    margin-right:3px;
+}
 input[type=text] {
     width: 100%;
     height: 30px;
