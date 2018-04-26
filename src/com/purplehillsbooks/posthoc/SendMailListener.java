@@ -50,7 +50,17 @@ public class SendMailListener {
     public static void createMessage(String from, String to, String subject, String mailBody, List<FileItem> attachments, String mailType) throws Exception {
         try {
             Message message = new MimeMessage(Session.getInstance(System.getProperties()));
-            message.setFrom(new InternetAddress(from));
+            int anglePos = from.indexOf("<");
+            int angleEnd = from.indexOf(">");
+            InternetAddress iAdd;
+            if (anglePos>0 && angleEnd>anglePos) {
+                iAdd = new InternetAddress(from.substring(anglePos+1, angleEnd).trim(), 
+                             from.substring(0,anglePos).trim(), "UTF-8");
+            }
+            else {
+                iAdd = new InternetAddress(from.trim());
+            }
+            message.setFrom(getEncodedAddress(from));
             message.setRecipients(Message.RecipientType.TO, InternetAddress.parse(to));
             message.setSentDate(new Date());
             message.setSubject(subject);
@@ -67,6 +77,20 @@ public class SendMailListener {
         }catch (Exception ex) {
         	throw new Exception("Send Mail Servlet: createMessage() ",ex);
 		}
+    }
+    
+    private static InternetAddress getEncodedAddress(String source) throws Exception {
+        int anglePos = source.indexOf("<");
+        int angleEnd = source.indexOf(">");
+        InternetAddress iAdd;
+        if (anglePos>0 && angleEnd>anglePos) {
+            iAdd = new InternetAddress(source.substring(anglePos+1, angleEnd).trim(), 
+                    source.substring(0,anglePos).trim(), "UTF-8");
+        }
+        else {
+            iAdd = new InternetAddress(source.trim());
+        }
+        return iAdd;
     }
     
     private static MimeBodyPart getMailBody(String body) throws Exception{

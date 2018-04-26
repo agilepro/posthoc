@@ -1,4 +1,11 @@
 <%@page errorPage="error.jsp"
+%><%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
+%><%@page import="com.purplehillsbooks.posthoc.EmailModel"
+%><%@page import="com.purplehillsbooks.posthoc.MailListener"
+%><%@page import="com.purplehillsbooks.posthoc.SendMailListener"
+%><%@page import="com.purplehillsbooks.streams.HTMLWriter"
+%><%@page import="com.purplehillsbooks.streams.JavaScriptWriter"
+%><%@page import="com.purplehillsbooks.streams.MemFile"
 %><%@page import="java.io.File"
 %><%@page import="java.io.FileInputStream"
 %><%@page import="java.io.InputStream"
@@ -7,21 +14,16 @@
 %><%@page import="java.io.StringReader"
 %><%@page import="java.io.Writer"
 %><%@page import="java.net.URLEncoder"
+%><%@page import="java.util.ArrayList"
 %><%@page import="java.util.Date"
 %><%@page import="java.util.List"
-%><%@page import="java.util.ArrayList"
 %><%@page import="java.util.Properties"
 %><%@page import="javax.mail.Address"
 %><%@page import="javax.mail.BodyPart"
 %><%@page import="javax.mail.Multipart"
 %><%@page import="javax.mail.Session"
+%><%@page import="javax.mail.internet.InternetAddress"
 %><%@page import="javax.mail.internet.MimeMessage"
-%><%@page import="com.purplehillsbooks.posthoc.MailListener"
-%><%@page import="com.purplehillsbooks.posthoc.SendMailListener"
-%><%@page import="com.purplehillsbooks.posthoc.EmailModel"
-%><%@page import="com.purplehillsbooks.streams.HTMLWriter"
-%><%@page import="com.purplehillsbooks.streams.JavaScriptWriter"
-%><%@page import="com.purplehillsbooks.streams.MemFile"
 %><%
 
     String selectedName = request.getParameter("msg");
@@ -191,7 +193,7 @@ app.filter('escape', function() {
 
 public void writeArray(Writer out, Address[] array) throws Exception  {
     for (int i=0; i<array.length; i++) {
-        HTMLWriter.writeHtml(out, array[i].toString());
+        HTMLWriter.writeHtml(out, ((InternetAddress)array[i]).toUnicodeString());
         out.write(" ");
     }
 }

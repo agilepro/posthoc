@@ -1,4 +1,9 @@
 <%@page errorPage="error.jsp"
+%><%@page import="com.purplehillsbooks.posthoc.EmailModel"
+%><%@page import="com.purplehillsbooks.posthoc.MailListener"
+%><%@page import="com.purplehillsbooks.streams.HTMLWriter"
+%><%@page import="com.purplehillsbooks.streams.JavaScriptWriter"
+%><%@page import="com.purplehillsbooks.streams.MemFile"
 %><%@page import="java.io.File"
 %><%@page import="java.io.FileInputStream"
 %><%@page import="java.io.InputStream"
@@ -14,11 +19,8 @@
 %><%@page import="javax.mail.BodyPart"
 %><%@page import="javax.mail.Multipart"
 %><%@page import="javax.mail.Session"
+%><%@page import="javax.mail.internet.InternetAddress"
 %><%@page import="javax.mail.internet.MimeMessage"
-%><%@page import="com.purplehillsbooks.posthoc.MailListener"
-%><%@page import="com.purplehillsbooks.posthoc.EmailModel"
-%><%@page import="com.purplehillsbooks.streams.HTMLWriter"
-%><%@page import="com.purplehillsbooks.streams.MemFile"
 %><%
 
     String selectedName = request.getParameter("msg");
@@ -102,9 +104,9 @@ app.controller('myCtrl', ['$scope', '$http', '$window', 'textAngularManager', fu
     
     
     $scope.mailHeader = {
-    		'from' : '<%writeArray(out, "", mm.getAllRecipients(), "");%>',
-            'to' :  '<%writeArray(out, "", mm.getFrom(), "");%>',
-            'subject' :  'RE: <%HTMLWriter.writeHtml(out, mm.getSubject());%>',
+    		'from' : '<%writeAddressJS(out, mm.getAllRecipients());%>',
+            'to' :  '<%writeAddressJS(out, mm.getFrom());%>',
+            'subject' :  'RE: <%JavaScriptWriter.encode(out, mm.getSubject());%>',
             'mailType': 'RE'
     };
    
@@ -224,8 +226,13 @@ app.controller('myCtrl', ['$scope', '$http', '$window', 'textAngularManager', fu
 
 public void writeArray(Writer out, String lable, Address[] array, String newline) throws Exception  {
     for (int i=0; i<array.length; i++) {
-        HTMLWriter.writeHtml(out, lable+" "+array[i].toString()+newline);
+        HTMLWriter.writeHtml(out, lable+" "+((InternetAddress)array[i]).toUnicodeString()+newline);
         out.write(" ");
+    }
+}
+public void writeAddressJS(Writer out, Address[] array) throws Exception  {
+    if (array.length>0) {
+        JavaScriptWriter.encode(out, ((InternetAddress)array[0]).toUnicodeString());
     }
 }
 

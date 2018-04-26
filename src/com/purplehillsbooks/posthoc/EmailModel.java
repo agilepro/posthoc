@@ -10,6 +10,7 @@ import java.util.Vector;
 
 import javax.mail.Address;
 import javax.mail.Session;
+import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
 /**
@@ -79,17 +80,19 @@ public final class EmailModel {
 
     private static String getFortyCharactersOfList(Address[] array) {
         StringBuffer sb = new StringBuffer();
-        for (int i=0; i<array.length; i++) {
-            sb.append(array[i].toString());
+        for (Address oneAddress : array) {
+            if (oneAddress instanceof InternetAddress) {
+                sb.append(((InternetAddress)oneAddress).toUnicodeString());
+            }
+            else {
+                sb.append(oneAddress.toString());
+            }
             sb.append(" ");
         }
-        //if (sb.length()>40) {
-        //    return sb.substring(0,40);
-        //}
-        //else {
-            return sb.toString();
-        //}
+        return sb.toString();
     }
+    
+    
     /**
      * The file must have a particular kind of name to be used as an email message file
      * Files with non-conforming names should be ignored ... they might be junk.
