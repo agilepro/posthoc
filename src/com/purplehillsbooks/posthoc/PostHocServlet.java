@@ -9,6 +9,8 @@ import javax.servlet.ServletException;
 import javax.servlet.http.HttpServletRequest;
 import javax.servlet.http.HttpServletResponse;
 
+import com.purplehillsbooks.json.JSONException;
+
 public class PostHocServlet extends javax.servlet.http.HttpServlet {
 
     private static final long serialVersionUID = 1L;
@@ -45,14 +47,7 @@ public class PostHocServlet extends javax.servlet.http.HttpServlet {
          }
          catch (Exception e) {
              fatalServerError = e;
-             System.out.println("PostHocServlet: crash on initialization:");
-             Throwable t = e;
-             int count = 0;
-             while (t!=null) {
-                 System.out.println("    "+(++count)+": "+t.toString());
-                 t = t.getCause();
-             }            
-             e.printStackTrace();
+             JSONException.traceException(e,"PostHocServlet: crash on initialization");
          }
     } 
     

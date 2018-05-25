@@ -10,6 +10,7 @@ import java.io.Writer;
 import java.net.ServerSocket;
 import java.net.Socket;
 
+import com.purplehillsbooks.json.JSONException;
 import com.purplehillsbooks.streams.StreamHelper;
 
 public class POPServer extends Thread {
@@ -34,8 +35,7 @@ public class POPServer extends Thread {
                 handleRequests();
             }
             catch (Exception e) {
-                System.out.println("POP SERVER: -- EXCEPTION --");
-                e.printStackTrace(System.out);
+                JSONException.traceException(e,"POP SERVER: -- EXCEPTION --");
             }
         }
     }
