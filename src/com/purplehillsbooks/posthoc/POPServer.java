@@ -46,12 +46,12 @@ public class POPServer extends Thread {
             while(mySS.isBound()) {
     
                 Socket SS_accept = mySS.accept(); 
-                System.out.println("POP Server: socket accepted "+popPort);
+                //System.out.println("POP Server: socket accepted "+popPort);
                 
                 OutputStream os = SS_accept.getOutputStream();
                 OutputStreamWriter w = new OutputStreamWriter(os, "UTF-8");
                 
-                System.out.println("POP Server: sending +OK POP3 server ready");
+                //System.out.println("POP Server: sending +OK POP3 server ready");
                 w.write("+OK POP3 server ready\n");
                 w.flush();
                 
@@ -59,15 +59,15 @@ public class POPServer extends Thread {
                 InputStreamReader r = new InputStreamReader(is, "UTF-8");
                 
                 String inputLine = readLine(r); 
-                System.out.println("POP Server input: "+inputLine); 
+                //System.out.println("POP Server input: "+inputLine); 
                 while (inputLine.length()>0) {
                     handleCommand(inputLine, w);
                     inputLine = readLine(r); 
-                    System.out.println("POP Server input: "+inputLine); 
+                    //System.out.println("POP Server input: "+inputLine); 
                 }
                 w.close();
                 r.close();
-                System.out.println("POP Server: closing port"); 
+                //System.out.println("POP Server: closing port"); 
                 SS_accept.close();
             }
         }
@@ -122,7 +122,7 @@ public class POPServer extends Thread {
         String sret = retVal.toString();
         w.write(sret);
         w.flush();
-        System.out.println("PostHoc POP response:\n"+sret);
+        //System.out.println("PostHoc POP response:\n"+sret);
     }
     
     
