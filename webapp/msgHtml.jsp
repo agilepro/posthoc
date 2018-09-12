@@ -24,6 +24,7 @@
 %><%@page import="javax.mail.Session"
 %><%@page import="javax.mail.internet.InternetAddress"
 %><%@page import="javax.mail.internet.MimeMessage"
+%><%@page import="javax.mail.Message.RecipientType"
 %><%
 
     String selectedName = request.getParameter("msg");
@@ -148,7 +149,13 @@ app.filter('escape', function() {
 
         <table class="table">
         <tr><td>From: </td><td> <%writeArray(out, mm.getFrom());%></td></tr>
-        <tr><td>To: </td><td> <%writeArray(out, mm.getAllRecipients());%></td></tr>
+        <tr><td>To: </td><td> <%writeArray(out, mm.getRecipients(RecipientType.TO));%></td></tr>
+		<%
+        if (mm.getRecipients(RecipientType.CC)!=null) { %>
+         <tr><td>Cc: </td><td> <%writeArray(out, mm.getRecipients(RecipientType.CC));%></td></tr>
+        <% }
+        else{
+        } %>
         <tr><td>Date: </td><td> <%
             if (mmSentDate==null) {
                 %><span style="color:red;">(missing from message)</span><%
