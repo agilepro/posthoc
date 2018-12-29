@@ -57,7 +57,7 @@ public class PostHocServlet extends javax.servlet.http.HttpServlet {
             throw fatalServerError;
         }
         if (dataFolder==null) {
-            throw new Exception("PostHoc server has not been initialized for some reason!");
+            throw new JSONException("PostHoc server not initialized!  DataFolder is null.");
         }
         return dataFolder;
     }
@@ -80,7 +80,7 @@ public class PostHocServlet extends javax.servlet.http.HttpServlet {
     	    	theOutboxDir.mkdir();      	        
     	    } 
     	    catch(SecurityException se){
-    	    	throw new Exception("Outbox Directory not created ",se);
+    	    	throw new JSONException("Outbox Directory not created at {0}",se,theOutboxDir);
     	    }
     	}
     	return theOutboxDir;

@@ -18,6 +18,8 @@ import javax.mail.internet.MimeMultipart;
 
 import org.apache.commons.fileupload.FileItem;
 
+import com.purplehillsbooks.json.JSONException;
+
 /**
  * Listens to outgoing emails .
  */
@@ -75,7 +77,7 @@ public class SendMailListener {
             // write to file
             message.writeTo(new FileOutputStream(getMailName()));
         }catch (Exception ex) {
-        	throw new Exception("Send Mail Servlet: createMessage() ",ex);
+        	throw new JSONException("Send Mail Servlet: createMessage() (subject={0})",ex,subject);
 		}
     }
     
@@ -119,7 +121,7 @@ public class SendMailListener {
     	    	dirPath.mkdir();      	        
     	    } 
     	    catch(SecurityException se){
-    	    	throw new Exception("Temp Directory not created ",se);
+    	    	throw new JSONException("Temp Directory not created: {0}",se,dirPath);
     	    }
     	}else
     		cleanupTemp(dirPath);

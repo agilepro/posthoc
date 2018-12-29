@@ -4,6 +4,7 @@ import java.io.File;
 import java.io.FileInputStream;
 import java.util.Properties;
 
+import com.purplehillsbooks.json.JSONException;
 import com.purplehillsbooks.streams.StreamHelper;
 
 /**
@@ -21,15 +22,15 @@ public final class PostHocConfig {
         try {
             File webInfFolder = new File(appFolder, "WEB-INF");
             if (!webInfFolder.exists()) {
-                throw new Exception("The WEB-INF folder does not exist, "
-                        +"something must be wrong with the servlet configuration: "+webInfFolder.toString());
+                throw new JSONException("The WEB-INF folder does not exist ({0})"
+                        +"something must be wrong with the servlet configuration: ", webInfFolder);
             }
             
             //READ the build number from the file
             File buildNumFile = new File(webInfFolder, "BuildInfo.properties");
             if (!buildNumFile.exists()) {
-                throw new Exception("The BuildInfo.properties file does not exist, "
-                        +"something must be wrong with the servlet configuration: "+buildNumFile.toString());
+                throw new JSONException("The BuildInfo.properties file does not exist, "
+                        +"something must be wrong with the servlet configuration: {0}", buildNumFile);
             }
             Properties buildInfo = readProperties(buildNumFile);
             buildNumber = buildInfo.getProperty("BuildNumber");
@@ -37,8 +38,8 @@ public final class PostHocConfig {
             //READ the data location
             File dataLocFile = new File(webInfFolder, "DataLocation.properties");
             if (!dataLocFile.exists()) {
-                throw new Exception("The DataLocation.properties file does not exist, "
-                        +"something must be wrong with the servlet configuration: "+dataLocFile.toString());
+                throw new JSONException("The DataLocation.properties file does not exist, "
+                        +"something must be wrong with the servlet configuration: {0}", dataLocFile);
             }
             Properties props = readProperties(dataLocFile);
     
@@ -50,14 +51,14 @@ public final class PostHocConfig {
             if (!dataFolder.exists()) {
                 dataFolder.mkdirs();
                 if (!dataFolder.exists()) {
-                    throw new Exception("The PostHoc data folder does not exist, "
-                            +"and the server is unable to create it: "+dataFolder);                    
+                    throw new JSONException("The PostHoc data folder does not exist, "
+                            +"and the server is unable to create it: {0}",dataFolder);                    
                 }
                 System.out.println("PostHoc server created the data folder as: "+dataFolder.toString());
             }
             if (!dataFolder.isDirectory()) {
-                throw new Exception("The PostHoc data folder appears to be a file, and not a directory/folder: "
-                       +dataFolder.toString());                    
+                throw new JSONException("The PostHoc data folder appears to be a file, must be a directory/folder: {0}",
+                       dataFolder);                    
             }
             
             File realConfigFile = new File(dataFolder, "Config.properties");
@@ -66,8 +67,8 @@ public final class PostHocConfig {
                 StreamHelper.copyFileToFile(protoConfigFile, realConfigFile);
             }
             if (!realConfigFile.exists()) {
-                throw new Exception("Unable to create PostHoc config file from WEB-INF to the data folder: "
-                        +realConfigFile);                    
+                throw new JSONException("Unable to create PostHoc config file from WEB-INF to the data folder: {0}",
+                        realConfigFile);                    
             }
             
             props = readProperties(realConfigFile);
@@ -89,13 +90,13 @@ public final class PostHocConfig {
             System.out.println("PostHoc CONFIGURATION: "+hostName+":"+hostPort+"  -- Data folder: "+dataFolder);
         }
         catch (Exception e) {
-            throw new Exception("PostHoc CONFIGURATION: Unable to configure PostHoc at initialization time",e);
+            throw new JSONException("PostHoc CONFIGURATION: Unable to configure PostHoc at initialization time",e);
         }
     }
     
     private static Properties readProperties(File filePath) throws Exception {
         if (!filePath.exists()) {
-            throw new Exception("The properties file does not exist: "+filePath);
+            throw new JSONException("The properties file does not exist at {0}", filePath);
         }
         Properties props = new Properties();
         FileInputStream fis = new FileInputStream(filePath);

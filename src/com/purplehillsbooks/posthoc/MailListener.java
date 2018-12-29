@@ -98,18 +98,6 @@ public class MailListener implements SimpleMessageListener {
         }
     }
 
-    /**
-     * scans for and returns all the files that represent email messages.
-     * @deprecated - use listAllMessages  instead
-     *
-    public static List<File> listAllEmails() throws Exception {
-        List<File> res = new ArrayList<File> ();
-        for (EmailModel em : listAllMessages()) {
-			res.add(em.filePath);
-		}
-        return res;
-    }
-    */
 
     /**
      * scans for and returns all the files that represent email messages.

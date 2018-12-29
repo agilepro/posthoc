@@ -13,6 +13,8 @@ import javax.mail.Session;
 import javax.mail.internet.InternetAddress;
 import javax.mail.internet.MimeMessage;
 
+import com.purplehillsbooks.json.JSONException;
+
 /**
  * A structure representing metadata about an email message file
  */
@@ -32,7 +34,7 @@ public final class EmailModel {
             return em;
         }
         if (!sFile.exists()) {
-            throw new Exception("Unable to read an email message from a file that does not exist: "+sFile);
+            throw new JSONException("Unable to read an email message, file does not exist: {0}",sFile);
         }
         em = new EmailModel();
         em.filePath = sFile;
@@ -52,10 +54,10 @@ public final class EmailModel {
 
     public static Vector<EmailModel> getAllMessages(File containingFolder) throws Exception {
         if (containingFolder==null) {
-            throw new Exception("getAllMessages needs a containing folder parameter, got null");
+            throw new JSONException("getAllMessages needs a containing folder parameter, got null");
         }
         if (!containingFolder.exists()) {
-            throw new Exception("getAllMessages needs a containing folder that exists");
+            throw new JSONException("getAllMessages containing folder does not exist at {0}", containingFolder);
         }
         Vector<EmailModel> ret = new Vector<EmailModel>();
         for (File existingFile : containingFolder.listFiles()) {
