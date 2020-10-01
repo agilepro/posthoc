@@ -93,6 +93,7 @@ public class MailListener implements SimpleMessageListener {
         for (File child : children) {
             String name = child.getName();
             if (name.startsWith("email") && name.endsWith(".msg")) {
+                System.out.println("Email Deleted: "+child.getAbsolutePath());
                 child.delete();
             }
         }
@@ -106,21 +107,22 @@ public class MailListener implements SimpleMessageListener {
 
         //scan for and eliminate any OLD messages hanging around
         long earliestMailLimit = System.currentTimeMillis()-(24L*60*60*1000*storageDays);
-		File[] children = PostHocServlet.getDataFolder().listFiles();
+        File[] children = PostHocServlet.getDataFolder().listFiles();
         if (children!=null) {
-			//if the folder is empty, a null is returned.  So only iterate if non null.
-			for (File child : children) {
+            //if the folder is empty, a null is returned.  So only iterate if non null.
+            for (File child : children) {
 
-				//while scanning the folder, we simply check the timeout.
-				//any file older than the timeout is simply deleted, and
-				//go on to the next file
-				if (child.lastModified()<earliestMailLimit) {
-					if (EmailModel.properFilename(child.getName())) {
-						child.delete();
-					}
-				}
-			}
-		}
+                //while scanning the folder, we simply check the timeout.
+                //any file older than the timeout is simply deleted, and
+                //go on to the next file
+                if (child.lastModified()<earliestMailLimit) {
+                    if (EmailModel.properFilename(child.getName())) {
+                        System.out.println("Email Deleted: "+child.getAbsolutePath());
+                        child.delete();
+                    }
+                }
+            }
+        }
 
         List<EmailModel> theList =  EmailModel.getAllMessages(PostHocServlet.getDataFolder());
         sortEmail(theList);
@@ -142,7 +144,9 @@ public class MailListener implements SimpleMessageListener {
         }
 
         File newFile = new File(PostHocServlet.getDataFolder(), "email"+thisUnique+".msg");
-        mailContent.outToOutputStream(new FileOutputStream(newFile));
+        FileOutputStream fos = new FileOutputStream(newFile);
+        mailContent.outToOutputStream(fos);
+        fos.close();
     }
 
     /**
@@ -164,26 +168,26 @@ public class MailListener implements SimpleMessageListener {
         return "[No Subject Found]";
     }
 
-	/**
-	* Sorts the list of email messages in reverse chronological order.
-	* The newest message will be first.
-	*/
+    /**
+    * Sorts the list of email messages in reverse chronological order.
+    * The newest message will be first.
+    */
     public static void sortEmail(List<EmailModel> coll) {
 
-		Comparator<EmailModel> comparator = new Comparator<EmailModel>() {
-		    public int compare(EmailModel c1, EmailModel c2) {
-		        if (c1.received < c2.received) {
-					return 1;
-				} else if (c1.received > c2.received) {
-					return -1;
-				}
-				else {
-					return 0;
-				}
-		    }
-		};
+        Comparator<EmailModel> comparator = new Comparator<EmailModel>() {
+            public int compare(EmailModel c1, EmailModel c2) {
+                if (c1.timeStamp < c2.timeStamp) {
+                    return 1;
+                } else if (c1.timeStamp > c2.timeStamp) {
+                    return -1;
+                }
+                else {
+                    return 0;
+                }
+            }
+        };
 
         Collections.sort(coll, comparator);
-	}
+    }
 
 }

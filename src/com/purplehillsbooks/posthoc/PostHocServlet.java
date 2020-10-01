@@ -25,24 +25,24 @@ public class PostHocServlet extends javax.servlet.http.HttpServlet {
 
     @Override
     public void init(ServletConfig config) throws ServletException {
-    	 try {
-    		 //For first time phConfig will be null
-    		 //second time phConfig will have value c:/opt/PostHocData/
-             if(phConfig == null){            	 
-            	 System.out.println("PostHoc Servlet: Server starting");
+         try {
+             //For first time phConfig will be null
+             //second time phConfig will have value c:/opt/PostHocData/
+             if(phConfig == null){               
+                 System.out.println("PostHoc Servlet: Server starting");
  
-	             ServletContext sc = config.getServletContext();
-	             File contextPath = new File(sc.getRealPath("/"));
-	             phConfig = new PostHocConfig(contextPath);
+                 ServletContext sc = config.getServletContext();
+                 File contextPath = new File(sc.getRealPath("/"));
+                 phConfig = new PostHocConfig(contextPath);
  
-	             dataFolder = phConfig.dataFolder;
-	             InetAddress bindAddress = InetAddress.getByName(phConfig.hostName);
+                 dataFolder = phConfig.dataFolder;
+                 InetAddress bindAddress = InetAddress.getByName(phConfig.hostName);
  
-	             SMTPServerHandler.startServer(phConfig.hostPort, bindAddress);
-	             System.out.println("PostHocServlet: Server started on "+phConfig.hostName+":"+phConfig.hostPort);
-	             System.out.println("PostHocServlet: Server saving data in: "+dataFolder);
+                 SMTPServerHandler.startServer(phConfig.hostPort, bindAddress);
+                 System.out.println("PostHocServlet: Server started on "+phConfig.hostName+":"+phConfig.hostPort);
+                 System.out.println("PostHocServlet: Server saving data in: "+dataFolder);
  
-	             POPServer.startListening(phConfig);
+                 POPServer.startListening(phConfig);
              } 
          }
          catch (Exception e) {
@@ -64,26 +64,37 @@ public class PostHocServlet extends javax.servlet.http.HttpServlet {
     
     /**
      * Returns outbox directory path 
-     */
-    public static File getOutBoxFolder() throws Exception {
-       
-        return createOutbox(new File(getDataFolder(), "outbox"));
-    }
-    
-    /**
      * Create outbox Directory if it does not exist
      */
-    private static File createOutbox(File theOutboxDir) throws Exception{    	
-    	
-    	if (!theOutboxDir.exists()) {    	    
-    	    try{
-    	    	theOutboxDir.mkdir();      	        
-    	    } 
-    	    catch(SecurityException se){
-    	    	throw new JSONException("Outbox Directory not created at {0}",se,theOutboxDir);
-    	    }
-    	}
-    	return theOutboxDir;
+    public static File getOutBoxFolder() throws Exception {
+        File theOutboxDir = new File(getDataFolder(), "outbox");
+        if (!theOutboxDir.exists()) {           
+            try{
+                if (!theOutboxDir.mkdir()) {
+                    throw new JSONException("Create folder failed: {0}", theOutboxDir.getCanonicalPath());
+                };               
+            } 
+            catch(SecurityException se){
+                throw new JSONException("Outbox Directory not created at {0}",se,theOutboxDir.getCanonicalPath());
+            }
+        }
+        return theOutboxDir;
+    }
+    
+    
+    public static File getTempFolder() throws Exception {
+        File tempFolder = new File(getDataFolder(), "temp");
+        if (!tempFolder.exists()) {           
+            try{
+                if (!tempFolder.mkdir()) {
+                    throw new JSONException("Create folder failed: {0}", tempFolder.getCanonicalPath());
+                };               
+            } 
+            catch(SecurityException se){
+                throw new JSONException("Temp Directory not created at {0}",se,tempFolder.getCanonicalPath());
+            }
+        }
+        return tempFolder;
     }
 
 }

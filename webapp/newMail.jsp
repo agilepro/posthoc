@@ -1,4 +1,6 @@
-<%@page errorPage="error.jsp"%>
+<%@page errorPage="error.jsp"
+%><%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
+%>
 <!DOCTYPE html>
 <html>
 <head>
@@ -21,7 +23,7 @@ app.directive('ngFiles', ['$parse', function ($parse) {
     }
 } ])
 app.controller('myCtrl', ['$scope', '$http', '$window', 'textAngularManager', function myCtrl($scope, $http, $window, textAngularManager) {
-    $scope.msg = {};
+    $scope.mailInfo = {};
     $scope.mode = "Create Mail";
 
     $scope.showError = false;
@@ -31,29 +33,27 @@ app.controller('myCtrl', ['$scope', '$http', '$window', 'textAngularManager', fu
     $scope.reportError = function(serverErr) {
         errorPanelHandler($scope, serverErr);
     };
+    $scope.mailContent = "z <b>gg</b>xc";
     
     $scope.files = []; 
     $scope.getTheFiles = function ($files) {
         angular.forEach($files, function (value, key) {
-        	$scope.files.push(value);
+            $scope.files.push(value);
         });
     };
     
     $scope.mailHeader = {
-    		'from' : '',
+            'from' : '',
             'to' :  '',
             'subject' :  '',
             'mailType': ''
     };
     
     $scope.sendMail = function() {
-    	$scope.jsonData = {
-	    			'from' :  $scope.mailHeader.from,
-		            'to' :  $scope.mailHeader.to,
-		            'subject' :  $scope.mailHeader.subject,
-		            'mailContent' :  $scope.mailContent,
-		            'mailType': $scope.mailHeader.mailType 
-	            };
+        var jsonEncoded = JSON.stringify($scope.mailInfo);
+        console.log("SENDING-1: ", jsonEncoded);
+    	var hexEncoded = thoroughlyEncode(jsonEncoded);
+        console.log("SENDING-2: ", hexEncoded, hexEncoded.length);
         $http({
             url : 'servlet/send',
             method : "POST",
@@ -66,13 +66,13 @@ app.controller('myCtrl', ['$scope', '$http', '$window', 'textAngularManager', fu
                 }  
                 return formData;  
             },  
-            data: { model: $scope.jsonData, files: $scope.files } 
+            data: { model: hexEncoded, files: $scope.files } 
         }).then(function(response) {
             console.log(response.data);
+            //confirm("ready to refresh?");
             $scope.message = response.data;
-            if($scope.message ==='Status : email message stored in POP message box'){
-            	var res = $window.location.pathname.split("/");
-            	var url = "http://" + $window.location.host + "/" + res[1] + "/outbox.jsp";
+            if($scope.message.indexOf('email message stored')>0){
+            	var url = "outbox.jsp";
                 $window.location.href = url;
         	}
         }, function(response) {
@@ -104,13 +104,13 @@ app.controller('myCtrl', ['$scope', '$http', '$window', 'textAngularManager', fu
 <div class="msgmain">
 
         <table class="table">
-        <tr><td><b>From:</b> </td><td><input type="text" ng-model="mailHeader.from" /></td></tr>
-        <tr><td><b>To:</b> </td><td><input type="text" ng-model="mailHeader.to" /></td></tr>       
-        <tr><td><b>Subject:</b> </td><td><input type="text" ng-model="mailHeader.subject" /></td></tr>
+        <tr><td><b>From:</b> </td><td><input type="text" ng-model="mailInfo.from" /></td></tr>
+        <tr><td><b>To:</b> </td><td><input type="text" ng-model="mailInfo.to" /></td></tr>       
+        <tr><td><b>Subject:</b> </td><td><input type="text" ng-model="mailInfo.subject" /></td></tr>
         <tr><td>Attachment:</td><td><input type="file" id="file1" name="file" multiple
             ng-files="getTheFiles($files)" /></td></tr>
         </table>
-         <div class="msgmain" text-angular="text-angular" name="htmlcontent" ng-model="mailContent"></div>
+         <div class="msgmain" text-angular="text-angular" name="htmlcontent" ng-model="mailInfo.body"></div>
 </div>
 <div style="height:100px"></div>
 </body>
