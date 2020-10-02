@@ -33,6 +33,6 @@ Using this saves so much time when working with applications that send email.  I
 
 That is pretty much all there is.  There is no clutter.  There is no way to forward a message.  No way to compose a message (Post Hoc receives and displays messages only).  No options for saving the message in folders, or preserving them in any way.  (If you need more than five days it is easy to find and save the .msg file some place else — the name of the file is displayed — but I have never needed that capability.)   It does that one thing:  it looks exactly like an SMTP server, and it displays the messages received.
 
-
+Note:  PostHoc is a single threaded application.  When it is handling request from one client, it will block all other requests until that first client is done.   Do not attempt to make two connections to PostHoc at the same time because one will block the other.  This is sufficient to test most applications.
 
 
