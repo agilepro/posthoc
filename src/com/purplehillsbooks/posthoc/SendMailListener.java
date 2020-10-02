@@ -95,6 +95,16 @@ public class SendMailListener {
     }
 
     private static InternetAddress getEncodedAddress(String source) throws Exception {
+        //just in case someone typed multiple addresses in
+        //only use the forst one
+        int commaPos = source.indexOf(",");
+        if (commaPos>0) {
+            source = source.substring(0,commaPos);
+        }
+        commaPos = source.indexOf(";");
+        if (commaPos>0) {
+            source = source.substring(0,commaPos);
+        }
         int anglePos = source.indexOf("<");
         int angleEnd = source.indexOf(">");
         InternetAddress iAdd;

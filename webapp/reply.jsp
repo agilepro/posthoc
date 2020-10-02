@@ -86,9 +86,7 @@ app.controller('myCtrl', ['$scope', '$http', '$window', 'textAngularManager', fu
     
     $scope.sendMail = function() {
         var jsonEncoded = JSON.stringify($scope.mailInfo);
-        console.log("SENDING-1: ", jsonEncoded);
     	var hexEncoded = thoroughlyEncode(jsonEncoded);
-        console.log("SENDING-2: ", hexEncoded, hexEncoded.length);
         $http({
             url : 'servlet/send',
             method : "POST",

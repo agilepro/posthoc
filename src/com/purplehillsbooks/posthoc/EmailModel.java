@@ -310,6 +310,16 @@ public final class EmailModel {
     }
 
     private static InternetAddress encodeAddress(String source) throws Exception {
+        //just in case someone typed multiple addresses in
+        //only use the forst one
+        int commaPos = source.indexOf(",");
+        if (commaPos>0) {
+            source = source.substring(0,commaPos);
+        }
+        commaPos = source.indexOf(";");
+        if (commaPos>0) {
+            source = source.substring(0,commaPos);
+        }
         int anglePos = source.indexOf("<");
         int angleEnd = source.indexOf(">");
         InternetAddress iAdd;
@@ -406,7 +416,36 @@ public final class EmailModel {
         return mailHeader;
     }
 
+    private String removeTagAt(String input, int pos) {
+        int imgEnd = input.indexOf(">", pos);
+        if (imgEnd>pos) {
+            return input.substring(0, pos)+input.substring(imgEnd+1);
+        }
+        else {
+            return input.substring(0, pos);
+        }
+    }
+
     public EmailModel createReply() throws Exception {
+
+        //there is a problem with the text editor in that it can not handle
+        //image tags, probably because they have to be loaded from a remote
+        //site.   Since the editor does not really allow editing anything
+        //with images in it, this action strips all the images out that
+        //happen to be in the message.  This allows reply to work.
+        String cleanedBody = body;
+        int imgPos = cleanedBody.indexOf("<img");
+        while (imgPos>=0) {
+            cleanedBody = removeTagAt(cleanedBody, imgPos);
+            imgPos = cleanedBody.indexOf("<img");
+        }
+        imgPos = cleanedBody.indexOf("<IMG");
+        while (imgPos>=0) {
+            cleanedBody = removeTagAt(cleanedBody, imgPos);
+            imgPos = cleanedBody.indexOf("<IMG");
+        }
+
+
         EmailModel reply = newMessage();
         reply.to = from;
         reply.subject = "RE: "+subject;
@@ -427,7 +466,7 @@ public final class EmailModel {
         sw.write("</div>");
 
         sw.write("\n<br/>\n<br/>");
-        sw.write(body);
+        sw.write(cleanedBody);
 
         reply.body = sw.toString();
 
