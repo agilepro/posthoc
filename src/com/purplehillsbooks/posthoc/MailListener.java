@@ -35,7 +35,7 @@ public class MailListener implements SimpleMessageListener {
      * @param saver a {@code MailServer} object used to save emails and notify components.
      */
     public MailListener() {
-        
+
     }
 
     /**
@@ -93,7 +93,6 @@ public class MailListener implements SimpleMessageListener {
         for (File child : children) {
             String name = child.getName();
             if (name.startsWith("email") && name.endsWith(".msg")) {
-                System.out.println("Email Deleted: "+child.getAbsolutePath());
                 child.delete();
             }
         }
@@ -117,7 +116,6 @@ public class MailListener implements SimpleMessageListener {
                 //go on to the next file
                 if (child.lastModified()<earliestMailLimit) {
                     if (EmailModel.properFilename(child.getName())) {
-                        System.out.println("Email Deleted: "+child.getAbsolutePath());
                         child.delete();
                     }
                 }

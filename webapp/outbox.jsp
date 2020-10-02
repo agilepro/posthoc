@@ -5,14 +5,13 @@
 %><%@page import="java.util.List"
 %><%@page import="java.util.Date"
 %><%@page import="com.purplehillsbooks.posthoc.EmailModel"
-%><%@page import="com.purplehillsbooks.posthoc.SendMailListener"
 %><%@page import="com.purplehillsbooks.streams.HTMLWriter"
 %><%@page import="com.purplehillsbooks.json.JSONArray"
 %><%@page import="com.purplehillsbooks.json.JSONObject"
 %><%@page import="java.text.SimpleDateFormat"
 %><%
 
-    List<EmailModel> msgs = SendMailListener.listAllOutboxMessages();
+    List<EmailModel> msgs = EmailModel.getOutbox();
 
     SimpleDateFormat dFormat = new SimpleDateFormat("MMM dd - HH:mm:ss");
 
@@ -159,7 +158,7 @@ tr:hover {
 
 <div class="well" style="margin:10px">
 <p>Total of <%=count%> messages.<br/>
-Message files are stored for <%= SendMailListener.storageDays %> days before discarding.</p>
+Message files are stored for 5 days before discarding.</p>
 </div>
 
 </body>

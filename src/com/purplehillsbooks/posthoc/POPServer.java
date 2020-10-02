@@ -51,12 +51,10 @@ public class POPServer extends Thread {
             while(mySS.isBound()) {
 
                 Socket SS_accept = mySS.accept();
-                //System.out.println("POP Server: socket accepted "+popPort);
 
                 OutputStream os = SS_accept.getOutputStream();
                 OutputStreamWriter w = new OutputStreamWriter(os, "UTF-8");
 
-                //System.out.println("POP Server: sending +OK POP3 server ready");
                 w.write("+OK POP3 server ready\n");
                 w.flush();
 
@@ -68,15 +66,12 @@ public class POPServer extends Thread {
                 InputStreamReader r = new InputStreamReader(is, "UTF-8");
 
                 String inputLine = readLine(r);
-                //System.out.println("POP Server input: "+inputLine);
                 while (inputLine.length()>0) {
                     handleCommand(inputLine, w);
                     inputLine = readLine(r);
-                    //System.out.println("POP Server input: "+inputLine);
                 }
                 w.close();
                 r.close();
-                //System.out.println("POP Server: closing port");
                 SS_accept.close();
             }
         }
@@ -90,7 +85,6 @@ public class POPServer extends Thread {
         try {
             String fourLetters = cmd.substring(0,4).toUpperCase();
             StringBuilder retVal = new StringBuilder();
-            System.out.println("POP: command: "+cmd);
             if ("CAPA".equals(fourLetters)) {
                 retVal.append("+OK Capability list follows\r\n");
                 retVal.append("RESP-CODES\r\n");
@@ -131,13 +125,13 @@ public class POPServer extends Thread {
                 retVal.append("-Don't understand: "+cmd+"\r\n");
             }
             String sret = retVal.toString();
-            System.out.println("POP: response: \n"+sret+"\n");
             w.write(sret);
             w.flush();
         }
         catch (Exception e) {
             w.write("-ERR "+e.toString()+"\r\n");
-            System.out.println("POP: -ERR "+e.toString()+"\r\n");
+            System.out.println("POP: command: "+cmd);
+            e.printStackTrace(System.out);
             w.flush();
         }
     }
@@ -157,7 +151,6 @@ public class POPServer extends Thread {
             ch = r.read();
         }
         String s = line.toString();
-        //System.out.println("PostHoc POP: read: "+s);
         return s;
     }
 

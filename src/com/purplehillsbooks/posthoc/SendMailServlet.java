@@ -38,9 +38,7 @@ public class SendMailServlet extends javax.servlet.http.HttpServlet {
             for(FileItem item : fileItemList){
                 if(item.isFormField()){
                     String hexEncodedValue = item.getString("UTF-8");
-                    System.out.println("SEND MAIL RAW: "+hexEncodedValue);
                     fieldValue = hexDecode(hexEncodedValue);
-                    System.out.println("SEND MAIL RCV: "+fieldValue);
                 }
                 else {
                     EmailAttachment eatt = new EmailAttachment();
@@ -54,10 +52,6 @@ public class SendMailServlet extends javax.servlet.http.HttpServlet {
                 throw new Exception("Was not able to find the Email Message JSON structure");
             }
             JSONObject jObj = new JSONObject(new JSONTokener(fieldValue));
-            System.out.println("SEND MAIL from: "+jObj.getString("from"));
-            System.out.println("SEND MAIL to: "+jObj.getString("to"));
-            System.out.println("SEND MAIL subject: "+jObj.getString("subject"));
-            System.out.println("SEND MAIL body: "+jObj.getString("body"));
 
             EmailModel em = EmailModel.newMessage();
             em.from = jObj.getString("from");
@@ -69,7 +63,7 @@ public class SendMailServlet extends javax.servlet.http.HttpServlet {
             em.writeToFile(attList);
 
             sendStatus = "email message stored in outbox: "+em.filePath;
-            System.out.println("SEND MAIL: email message stored in outbox: "+em.filePath);
+            System.out.println("POSTHOC SEND MAIL: email message stored in outbox: "+em.filePath);
         }
         catch (Exception e) {
             sendStatus = "Mail not saved in outbox: " + e.getMessage();

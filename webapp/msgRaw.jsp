@@ -8,34 +8,25 @@
 %><%@page import="java.util.ArrayList"
 %><%@page import="com.purplehillsbooks.posthoc.EmailModel"
 %><%@page import="com.purplehillsbooks.posthoc.MailListener"
-%><%@page import="com.purplehillsbooks.posthoc.SendMailListener"
 %><%@page import="com.purplehillsbooks.streams.HTMLWriter"
 %><%@page import="com.purplehillsbooks.streams.JavaScriptWriter"
 %><%
 
     String selectedName = request.getParameter("msg");
 	String mailType = request.getParameter("mailType");
-	List<EmailModel> msgs= new ArrayList<EmailModel>();
-	if("inbox".equals(mailType))
-		msgs = MailListener.listAllMessages();
-	else if("outbox".equals(mailType))
-	msgs = SendMailListener.listAllOutboxMessages();
-    File foundMsg = null;
-    for (EmailModel msgMod : msgs) {
-        File msg = msgMod.filePath;
-        String name = msg.getName();
-        if (selectedName.equals(name)) {
-            foundMsg = msg;
-        }
+    EmailModel foundMsg = null;
+    if("outbox".equals(mailType)) {
+    	foundMsg = EmailModel.getOutboxMessage(selectedName);
+    }
+    else {
+    	foundMsg = EmailModel.getInboxMessage(selectedName);
+    }
+    
+    if (foundMsg==null) {
+        throw new Exception("Can not find a message with name: "+selectedName);
     }
 
-    if (foundMsg==null) {
-        %>
-        <html><body><h1>ERROR: no email message named: <%=selectedName%></h1></body></html>
-        <%
-        return;
-    }
-    FileInputStream fis = new FileInputStream(foundMsg);
+    FileInputStream fis = new FileInputStream(foundMsg.filePath);
     InputStreamReader isr = new InputStreamReader(fis, "UTF-8");
     HTMLWriter hw = new HTMLWriter(out);
 

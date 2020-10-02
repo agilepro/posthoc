@@ -142,6 +142,7 @@ public final class EmailModel {
         body = "";  //in case it is not found
 
         Object content = mm.getContent();
+        System.out.println("MAIN content type: "+content.getClass().getName());
         if (content instanceof String) {
             //in this case there is NO multipart, it is just
             //an email without any attachments
@@ -152,7 +153,11 @@ public final class EmailModel {
             throw new Exception("Don't understand object type ("+content.getClass().getCanonicalName()+") in file: "+filePath.getCanonicalPath());
         }
         Multipart mult = (Multipart)content;
+        findBodyInMulti(mult);
 
+    }
+
+    private void findBodyInMulti(Multipart mult) throws Exception {
         for (int i=0; i<mult.getCount(); i++) {
             BodyPart part = mult.getBodyPart(i);
             String disposition = part.getDisposition();
@@ -162,7 +167,14 @@ public final class EmailModel {
                 continue;
             }
 
-            content = part.getContent();
+            Object content = part.getContent();
+            System.out.println("PART content type: "+content.getClass().getName());
+            if (content instanceof Multipart) {
+                //need to recurse down this
+                Multipart mult2 = (Multipart)content;
+                findBodyInMulti(mult2);
+                continue;
+            }
             if (content instanceof String) {
                 //in this case part is either text or html
                 //not sure which.  We will choose the LAST that occurs in the file
@@ -233,22 +245,6 @@ public final class EmailModel {
                 continue;
             }
             String fileName = part.getFileName();
-            /*
-            int fileStart = disposition.indexOf("filename=\"")+10;
-            if (fileStart>12) {
-                int fileEnd = disposition.indexOf("\"", fileStart);
-                if (fileEnd>fileStart) {
-                    fileName = disposition.substring(fileStart, fileEnd);
-                }
-                else {
-                    //should we complain?  Or go with a default?
-                    fileName = "att"+System.currentTimeMillis()+".file";
-                }
-            }
-            else {
-                fileName = "att"+System.currentTimeMillis()+".file";
-            }
-            */
 
             EmailAttachment att = new EmailAttachment();
             att.name = fileName;
@@ -481,6 +477,20 @@ public final class EmailModel {
             thisUnique = ++lastUnique;
         }
         return new File(PostHocServlet.getOutBoxFolder(), "email"+thisUnique+".msg");
+    }
+
+    /**
+     * Deletes all sent emails from file system.
+     */
+    public static void deleteOutboxEmails() throws Exception {
+        File[] children = PostHocServlet.getOutBoxFolder().listFiles();
+        for (File child : children) {
+            String name = child.getName();
+            if (name.startsWith("email") && name.endsWith(".msg")) {
+                System.out.println("OUTBOX Email Deleted: "+child.getAbsolutePath());
+                child.delete();
+            }
+        }
     }
 
 }

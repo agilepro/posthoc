@@ -27,7 +27,7 @@ public class SMTPServerHandler {
      * @throws IllegalArgumentException when port is out of range.
      */
     public static void startServer(int port, InetAddress bindAddress) throws Exception {
-        System.out.println("Starting server on port "+port);
+        System.out.println("Starting SMTP server (PostHoc) on port "+port);
         try {
             smtpServer.setBindAddress(bindAddress);
             smtpServer.setPort(port);
@@ -45,7 +45,7 @@ public class SMTPServerHandler {
      */
     public static void stopServer() {
         if (smtpServer.isRunning()) {
-            System.out.println("Stopping server");
+            System.out.println("Stopping SMTP server (PostHoc)");
             smtpServer.stop();
         }
     }

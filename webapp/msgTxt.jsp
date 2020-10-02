@@ -1,11 +1,13 @@
 <%@page errorPage="error.jsp"
 %><%@ page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
 %><%@page import="com.purplehillsbooks.posthoc.EmailModel"
+%><%@page import="com.purplehillsbooks.posthoc.EmailAttachment"
 %><%@page import="com.purplehillsbooks.posthoc.MailListener"
-%><%@page import="com.purplehillsbooks.posthoc.SendMailListener"
 %><%@page import="com.purplehillsbooks.streams.HTMLWriter"
 %><%@page import="com.purplehillsbooks.streams.JavaScriptWriter"
 %><%@page import="com.purplehillsbooks.streams.MemFile"
+%><%@page import="com.purplehillsbooks.json.JSONObject"
+%><%@page import="com.purplehillsbooks.json.JSONArray"
 %><%@page import="java.io.File"
 %><%@page import="java.io.FileInputStream"
 %><%@page import="java.io.InputStream"
@@ -26,46 +28,26 @@
 
     String selectedName = request.getParameter("msg");
 	String mailType = request.getParameter("mailType");
-	List<EmailModel> msgs= new ArrayList<EmailModel>();
-	if("inbox".equals(mailType))
-		msgs = MailListener.listAllMessages();
-	else if("outbox".equals(mailType))
-		msgs = SendMailListener.listAllOutboxMessages();   
-    File foundMsg = null;
-    for (EmailModel msgMod : msgs) {
-        File msg = msgMod.filePath;
-        String name = msg.getName();
-        if (selectedName.equals(name)) {
-            foundMsg = msg;
-        }
+    EmailModel foundMsg = null;
+    if("outbox".equals(mailType)) {
+    	foundMsg = EmailModel.getOutboxMessage(selectedName);
     }
-
+    else {
+    	foundMsg = EmailModel.getInboxMessage(selectedName);
+    }
+    
     if (foundMsg==null) {
-        %>
-        <html><body><h1>ERROR: no email message named: <%=selectedName%></h1></body></html>
-        <%
-        return;
+        throw new Exception("Can not find a message with name: "+selectedName);
     }
 
 
-    Properties props = new Properties();
-    Session mSession = Session.getDefaultInstance(props);
+    JSONArray atts = new JSONArray();
+    for (EmailAttachment eatt : foundMsg.loadAttachments()) {
+        atts.put(eatt.listingJSON());
+    }
+    String foundbody = foundMsg.body;
 
     HTMLWriter hw = new HTMLWriter(out);
-    FileInputStream fis = new FileInputStream(foundMsg);
-
-    MimeMessage mm = new MimeMessage(mSession, fis);
-    String stringBody = null;
-    Multipart mult = null;
-
-    Object content = mm.getContent();
-    if (content instanceof String) {
-        stringBody = (String)content;
-    }
-    else if (content instanceof Multipart) {
-        mult = (Multipart)content;
-    }
-    Date mmSentDate = mm.getSentDate();
 
 %><!DOCTYPE html>
 <html>
@@ -79,6 +61,7 @@ app.controller('myCtrl', function($scope, $http) {
     $scope.msg = {};
     $scope.mode = "Message Text";
     $scope.mailType = "<%JavaScriptWriter.encode(out, mailType);%>";
+    $scope.mailInfo = <% foundMsg.getJSON().write(out, 2, 2); %>;
     $scope.selectedName = "<%JavaScriptWriter.encode(out, selectedName);%>";
     $scope.showError = false;
     $scope.errorMsg = "";
@@ -134,69 +117,29 @@ app.filter('escape', function() {
 
 <div class="msgmain">
 
-<%
-    if (stringBody!=null) {
-        HTMLWriter.writeHtmlWithLines(out,stringBody);
-    }
-    else if (mult!=null) {
 
-        %>
+    <table class="table">
+    <tr><td>From: </td><td> {{mailInfo.from}}</td></tr>
+    <tr><td>To: </td><td> {{mailInfo.to}}</td></tr>
+    <tr><td>Date: </td><td> {{mailInfo.timeStamp | date}}</td></tr>
+    <tr><td>Subject: </td><td> {{mailInfo.subject}}</td></tr>
+    </table>
+    
+    <div class="well" style="margin-top:15px">Body</div>
+    <div class="emailbox"><% HTMLWriter.writeHtmlWithLines(out, foundbody); %></div>
+    
+    <div ng-repeat="att in atts">
+      <div class="well" style="margin-top:15px">Attachment</div>
+      <div class="emailbox">
+        Attachment: <a href="attachRaw.jsp?msg={{selectedName}}&mailType={{mailType}}&attach={{att.name}}">{{att.name}}</a>
+        <br/>
+        Size: {{att.size}}
+      </div>
+    </div>
 
-        <table  class="table">
-        <tr><td>From: </td><td> <%writeArray(out, mm.getFrom());%></td></tr>
-        <tr><td>To: </td><td> <%writeArray(out, mm.getAllRecipients());%></td></tr>
-        <tr><td>Date: </td><td> <%
-            if (mmSentDate==null) {
-                %><span style="color:red;">(missing from message)</span><%
-            }
-            else {
-                HTMLWriter.writeHtml(out, mmSentDate.toString());
-            }
-            %></td></tr>
-        <tr><td>Subject: </td><td> <%HTMLWriter.writeHtml(out, mm.getSubject());%></td></tr>
-        </table>
-        <%
-        for (int i=0; i<mult.getCount(); i++) {
-            BodyPart p = mult.getBodyPart(i);
-            Object content2 = p.getContent();
-            %><div class="well">Part <%=(i+1)%> of <%=mult.getCount()%> </div>
-            <div class="emailbox"><%
-            if (content2 instanceof String) {
-                %><tt><%
-                HTMLWriter.writeHtmlWithLines(out,(String)content2);
-                %></tt><%
-            }
-            else {
-                out.write("\n<p>Content Type: "+content2.getClass().getName());
-                out.write("\n<br/>File name: "+p.getFileName());
-                out.write("\n<br/>Description: "+p.getDescription());
-                out.write("\n<br/>Size: "+p.getSize()+"\n</p>");
-            }
-            %></div><%
-        }
-        %>
-        <%
-    }
-%>
+</div>
 
 <div style="height:100px"></div>
+
 </body>
 </html>
-
-<%!
-
-public void SafeStrem() {
-
-}
-
-%>
-<%!
-
-public void writeArray(Writer out, Address[] array) throws Exception  {
-    for (int i=0; i<array.length; i++) {
-        HTMLWriter.writeHtml(out, ((InternetAddress)array[i]).toUnicodeString());
-        out.write(" ");
-    }
-}
-
-%>

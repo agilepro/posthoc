@@ -2,7 +2,6 @@
 %><%@page language="java" contentType="text/html; charset=UTF-8" pageEncoding="UTF-8"
 %><%@page import="com.purplehillsbooks.posthoc.EmailModel"
 %><%@page import="com.purplehillsbooks.posthoc.EmailAttachment"
-%><%@page import="com.purplehillsbooks.posthoc.SendMailListener"
 %><%@page import="com.purplehillsbooks.streams.HTMLWriter"
 %><%@page import="com.purplehillsbooks.streams.JavaScriptWriter"
 %><%@page import="com.purplehillsbooks.streams.MemFile"
