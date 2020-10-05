@@ -142,7 +142,6 @@ public final class EmailModel {
         body = "";  //in case it is not found
 
         Object content = mm.getContent();
-        System.out.println("MAIN content type: "+content.getClass().getName());
         if (content instanceof String) {
             //in this case there is NO multipart, it is just
             //an email without any attachments
@@ -168,7 +167,6 @@ public final class EmailModel {
             }
 
             Object content = part.getContent();
-            System.out.println("PART content type: "+content.getClass().getName());
             if (content instanceof Multipart) {
                 //need to recurse down this
                 Multipart mult2 = (Multipart)content;

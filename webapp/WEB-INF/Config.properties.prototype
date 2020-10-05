@@ -1,0 +1,29 @@
+#Configuration for PostHoc Server - Config.properties
+
+###########################################################
+# This file is read from the data folder that is specified in the "dataLocation.properties" file
+# There is a default copy of this file in the WEB-INF folder, but that is used only to 
+# initialize the copy that is in the data folder.   
+#
+# Be sure you are updating the right copy of this file!
+###########################################################
+
+
+
+# Host Name
+# used to access the server.
+# If PostHoc is on the same host as the application being tested then 127.0.0.1 will work
+# Otherwise use the host name that works from the client that will try to send email.
+hostName=127.0.0.1
+
+
+# SMTP Server Port
+# The port to listen for SMTP requests, usually either 25 (the standard port) or 2525 (non-standard)
+smtpPort=25
+
+
+# POP Server Port
+# The port to listen for POP requests, usually either 110 (the standard port)
+popPort=110
+
+

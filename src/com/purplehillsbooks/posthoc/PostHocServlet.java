@@ -38,8 +38,8 @@ public class PostHocServlet extends javax.servlet.http.HttpServlet {
                  dataFolder = phConfig.dataFolder;
                  InetAddress bindAddress = InetAddress.getByName(phConfig.hostName);
  
-                 SMTPServerHandler.startServer(phConfig.hostPort, bindAddress);
-                 System.out.println("PostHocServlet: Server started on "+phConfig.hostName+":"+phConfig.hostPort);
+                 SMTPServerHandler.startServer(phConfig.smtpPort, bindAddress);
+                 System.out.println("PostHocServlet: Server started on "+phConfig.hostName+":"+phConfig.smtpPort);
                  System.out.println("PostHocServlet: Server saving data in: "+dataFolder);
  
                  POPServer.startListening(phConfig);
