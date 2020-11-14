@@ -33,7 +33,7 @@ public class SMTPServerHandler {
             smtpServer.setPort(port);
             smtpServer.start();
         } catch (Exception e) {
-            throw new JSONException("Server is unable to start post {0} and bindaddress {1}", e, port, bindAddress);
+            throw new JSONException("Server is unable to start post {0} and bindaddress {1}", e, Integer.toString(port), bindAddress.toString());
         }
     }
 

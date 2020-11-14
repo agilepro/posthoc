@@ -13,8 +13,8 @@ import com.purplehillsbooks.streams.StreamHelper;
 public final class PostHocConfig {
 
     public String hostName;
-    public int    smtpPort;
-    public int    popPort;
+    public int    smtpPort  = 25;
+    public int    popPort   = 110;
     public File   dataFolder;
     public String buildNumber;
 
@@ -23,14 +23,14 @@ public final class PostHocConfig {
             File webInfFolder = new File(appFolder, "WEB-INF");
             if (!webInfFolder.exists()) {
                 throw new JSONException("The WEB-INF folder does not exist ({0})"
-                        +"something must be wrong with the servlet configuration: ", webInfFolder);
+                        +"something must be wrong with the servlet configuration: ", webInfFolder.getAbsolutePath());
             }
 
             //READ the build number from the file
             File buildNumFile = new File(webInfFolder, "BuildInfo.properties");
             if (!buildNumFile.exists()) {
                 throw new JSONException("The BuildInfo.properties file does not exist, "
-                        +"something must be wrong with the servlet configuration: {0}", buildNumFile);
+                        +"something must be wrong with the servlet configuration: {0}", buildNumFile.getAbsolutePath());
             }
             Properties buildInfo = readProperties(buildNumFile);
             buildNumber = buildInfo.getProperty("BuildNumber");
@@ -39,7 +39,7 @@ public final class PostHocConfig {
             File dataLocFile = new File(webInfFolder, "DataLocation.properties");
             if (!dataLocFile.exists()) {
                 throw new JSONException("The DataLocation.properties file does not exist, "
-                        +"something must be wrong with the servlet configuration: {0}", dataLocFile);
+                        +"something must be wrong with the servlet configuration: {0}", dataLocFile.getAbsolutePath());
             }
             Properties props = readProperties(dataLocFile);
 
@@ -52,13 +52,13 @@ public final class PostHocConfig {
                 dataFolder.mkdirs();
                 if (!dataFolder.exists()) {
                     throw new JSONException("The PostHoc data folder does not exist, "
-                            +"and the server is unable to create it: {0}",dataFolder);
+                            +"and the server is unable to create it: {0}",dataFolder.getAbsolutePath());
                 }
                 System.out.println("PostHoc server created the data folder as: "+dataFolder.toString());
             }
             if (!dataFolder.isDirectory()) {
                 throw new JSONException("The PostHoc data folder appears to be a file, must be a directory/folder: {0}",
-                       dataFolder);
+                       dataFolder.getAbsolutePath());
             }
 
             File realConfigFile = new File(dataFolder, "Config.properties");
@@ -68,7 +68,7 @@ public final class PostHocConfig {
             }
             if (!realConfigFile.exists()) {
                 throw new JSONException("Unable to create PostHoc config file from WEB-INF to the data folder: {0}",
-                        realConfigFile);
+                        realConfigFile.getAbsolutePath());
             }
 
             props = readProperties(realConfigFile);
@@ -101,7 +101,7 @@ public final class PostHocConfig {
 
     private static Properties readProperties(File filePath) throws Exception {
         if (!filePath.exists()) {
-            throw new JSONException("The properties file does not exist at {0}", filePath);
+            throw new JSONException("The properties file does not exist at {0}", filePath.getAbsolutePath());
         }
         Properties props = new Properties();
         FileInputStream fis = new FileInputStream(filePath);

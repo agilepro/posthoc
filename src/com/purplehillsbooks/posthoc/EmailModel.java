@@ -47,7 +47,7 @@ public final class EmailModel {
 
     public static synchronized EmailModel findMessage(File sFile) throws Exception {
         if (!sFile.exists()) {
-            throw new JSONException("Unable to read an email message, file does not exist: {0}",sFile);
+            throw new JSONException("Unable to read an email message, file does not exist: {0}",sFile.getAbsolutePath());
         }
         EmailModel em = cache.get(sFile);
         if (em!=null) {
@@ -78,7 +78,7 @@ public final class EmailModel {
             throw new JSONException("getAllMessages needs a containing folder parameter, got null");
         }
         if (!containingFolder.exists()) {
-            throw new JSONException("getAllMessages containing folder does not exist at {0}", containingFolder);
+            throw new JSONException("getAllMessages containing folder does not exist at {0}", containingFolder.getAbsolutePath());
         }
         Vector<EmailModel> ret = new Vector<EmailModel>();
         for (File existingFile : containingFolder.listFiles()) {
