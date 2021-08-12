@@ -12,7 +12,7 @@ plugins {
     id 'war'
 }
 
-war.baseName = 'posthoc'
+project.archivesBaseName = 'posthoc'
 
 repositories {
     // Use Maven Central for resolving dependencies.
@@ -25,7 +25,10 @@ dependencies {
 
     //use the local libraries
     implementation fileTree(dir: 'libs', include: ['*.jar'])
-    
+
+    // SubEtha SMTP is an easy-to-use server-side SMTP library for Java. 
+    implementation 'org.subethamail:subethasmtp:3.1.7'
+
     compileOnly 'org.apache.tomcat:tomcat-catalina:8.5.46'
 }
 
@@ -33,6 +36,8 @@ tasks.named('test') {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
 }
+
+version = '3.0'
 
 
 //java source files are UTF-8

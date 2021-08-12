@@ -3,3 +3,10 @@
 
 # Ignore Gradle build output directory
 build
+
+# Created by Eclipse
+.project
+.settings
+.classpath
+bin
+
