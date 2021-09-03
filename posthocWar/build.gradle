@@ -32,6 +32,24 @@ dependencies {
     compileOnly 'org.apache.tomcat:tomcat-catalina:8.5.46'
 }
 
+//following code generates a build id from date, and puts into WEB-INF folder
+task generateBuildId {
+  File extraFolder = new File( "${project.buildDir}/classes/extra")
+  if( !extraFolder.exists() ) {
+    extraFolder.mkdirs()
+  }
+  // create the file and write text to it.
+  new File("${project.buildDir}/classes/extra/BuildInfo.properties").text = "BuildNumber="+new Date().format('yyyy-MMdd-HHmm')
+}
+processResources.dependsOn generateBuildId
+war {
+   from("${project.buildDir}/classes/extra") {
+      include('BuildInfo.properties')
+      into('WEB-INF')
+   }
+}
+
+
 tasks.named('test') {
     // Use JUnit Platform for unit tests.
     useJUnitPlatform()
