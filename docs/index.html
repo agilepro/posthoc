@@ -1,0 +1,52 @@
+<html>
+<link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.7/css/bootstrap.min.css" integrity="sha384-BVYiiSIFeK1dGmJRAkycuHAHRg32OmUcww7on3RYdg4Va+PmSTsz/K68vbdEjh4u" crossorigin="anonymous"><body><style>h1 {    color:brown;}</style>
+<div class="well"><h1>PostHoc Release / Download</h1>
+
+<p>PostHoc is a email server that "catches" all email for review, and never forwards email on to anything else.</p>
+
+<p>PostHoc is great for testing software that sends email.  PostHoc looks like a standard SMTP email server.  But it also has a web interface that anyone can use to review all email that was sent.  There is no need to log in, all email to any address is made available through the UI without logging in.   You can create outbox messages which can then be picked up using POP protocol to test your software ability to receive email.   Mail is automatically deleted after 5 days.   Email can be displayed as regular message, as uninterpreted HTML so you can see the HTML codes, and as raw SMTP format if you want to see the details of the message that was sent.</p>
+
+
+<ul>
+<li><a href="posthoc-3.0.war">posthoc-3.0.war</a> - Sept 3, 2021 build 2021-0903-1347</li>
+</ul>
+
+<p>Find more information at: <a href="https://github.com/agilepro/posthoc">Posthoc on GitHub</a>
+
+<h2>Release notes</h2>
+
+<p><b>Sept 3, 2021</b></p>
+<ul>
+<li>Changed build to use Gradle and added version number to WAR file</li>
+</ul>
+
+
+<p><b>Oct 2, 2020</b></p>
+<ul>
+<li>eliminated the temp directory that was created in the outbox when handling attachments.  Receiving and attaching documents is handled completely in memory without needing a temporary file</li>
+<li>outbox handling no longer fails due to unexpected temp folder</li>
+<li>Message "reply" action: Several character encoding bugs corrected.  Images removed from text.</li>
+<li>Extensive testing with Thunderbird to demonstrate that full round trip SMTP-&gt;POP works reliably</li>
+</ul>
+
+<p><b>Aug 2, 2020</b></p>
+<ul>
+<li>updated to latest libraries</li>
+</ul>
+
+<p><b>Sept 17, 2018</b></p>
+
+<ul>
+<li>Now displays CC entries separate from the TO entries</li>
+</ul>
+
+<p><b>May 25, 2018</b></p>
+
+<ul>
+<li>New 'reply' functionality allows you to create email messages which are then picked up using postoffice protocol (POP).</li>
+</ul>
+
+
+</div>
+</body>
+</html>
