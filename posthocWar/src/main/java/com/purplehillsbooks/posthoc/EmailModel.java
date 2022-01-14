@@ -269,7 +269,7 @@ public final class EmailModel {
             Multipart multipart = new MimeMultipart();
 
             MimeBodyPart bodyPart = new MimeBodyPart();
-            bodyPart.setContent(body, "text/html; charset=utf-8");
+            bodyPart.setText(body, "UTF-8", "html");
             bodyPart.setHeader("Content-Type", "text/html; charset=utf-8");
             bodyPart.setHeader("Content-Transfer-Encoding", "8BIT");
             multipart.addBodyPart(bodyPart);
