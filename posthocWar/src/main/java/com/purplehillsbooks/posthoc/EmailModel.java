@@ -12,8 +12,6 @@ import java.util.Date;
 import java.util.Hashtable;
 import java.util.List;
 import java.util.Properties;
-import java.util.Vector;
-
 import javax.activation.DataHandler;
 import javax.mail.Address;
 import javax.mail.BodyPart;
@@ -73,14 +71,14 @@ public final class EmailModel {
     }
 
 
-    public static Vector<EmailModel> getAllMessages(File containingFolder) throws Exception {
+    public static List<EmailModel> getAllMessages(File containingFolder) throws Exception {
         if (containingFolder==null) {
             throw new JSONException("getAllMessages needs a containing folder parameter, got null");
         }
         if (!containingFolder.exists()) {
             throw new JSONException("getAllMessages containing folder does not exist at {0}", containingFolder.getAbsolutePath());
         }
-        Vector<EmailModel> ret = new Vector<EmailModel>();
+        ArrayList<EmailModel> ret = new ArrayList<EmailModel>();
         for (File existingFile : containingFolder.listFiles()) {
             if (properFilename(existingFile.getName())) {
                 EmailModel em = findMessage(existingFile);
@@ -92,10 +90,10 @@ public final class EmailModel {
         return ret;
     }
 
-    public static Vector<EmailModel> getInbox() throws Exception {
+    public static List<EmailModel> getInbox() throws Exception {
         return getAllMessages(PostHocServlet.getDataFolder());
     }
-    public static Vector<EmailModel> getOutbox() throws Exception {
+    public static List<EmailModel> getOutbox() throws Exception {
         return getAllMessages(PostHocServlet.getOutBoxFolder());
     }
     public static EmailModel getInboxMessage(String name) throws Exception {
