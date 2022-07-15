@@ -28,6 +28,9 @@ dependencies {
 
     // SubEtha SMTP is an easy-to-use server-side SMTP library for Java. 
     implementation 'org.subethamail:subethasmtp:3.1.7'
+    
+    // https://mvnrepository.com/artifact/com.purplehillsbooks.purple/purple
+    implementation 'com.purplehillsbooks.purple:purple:3.1'
 
     compileOnly 'org.apache.tomcat:tomcat-catalina:8.5.46'
 }
