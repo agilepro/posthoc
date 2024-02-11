@@ -16,7 +16,7 @@ public final class PostHocConfig {
     public int    smtpPort  = 25;
     public int    popPort   = 110;
     public File   dataFolder;
-    public String buildNumber;
+    public String buildNumber = "UNKNOWN";
 
     public PostHocConfig(File appFolder)  throws Exception {
         try {
@@ -27,13 +27,13 @@ public final class PostHocConfig {
             }
 
             //READ the build number from the file
-            File buildNumFile = new File(webInfFolder, "BuildInfo.properties");
-            if (!buildNumFile.exists()) {
-                throw new JSONException("The BuildInfo.properties file does not exist, "
-                        +"something must be wrong with the servlet configuration: {0}", buildNumFile.getAbsolutePath());
-            }
-            Properties buildInfo = readProperties(buildNumFile);
-            buildNumber = buildInfo.getProperty("BuildNumber");
+            //File buildNumFile = new File(webInfFolder, "BuildInfo.properties");
+            //if (!buildNumFile.exists()) {
+            //    throw new JSONException("The BuildInfo.properties file does not exist, "
+            //            +"something must be wrong with the servlet configuration: {0}", buildNumFile.getAbsolutePath());
+            //}
+            //Properties buildInfo = readProperties(buildNumFile);
+            // buildNumber = buildInfo.getProperty("BuildNumber");
 
             //READ the data location
             File dataLocFile = new File(webInfFolder, "DataLocation.properties");

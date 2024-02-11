@@ -3,41 +3,42 @@ package com.purplehillsbooks.posthoc;
 import java.io.IOException;
 import java.util.ArrayList;
 import java.util.List;
+import java.nio.charset.StandardCharsets;
 
-import javax.servlet.ServletException;
-import javax.servlet.http.HttpServletRequest;
-import javax.servlet.http.HttpServletResponse;
+import jakarta.servlet.ServletException;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
 
-import org.apache.commons.fileupload.FileItem;
-import org.apache.commons.fileupload.disk.DiskFileItemFactory;
-import org.apache.commons.fileupload.servlet.ServletFileUpload;
+import org.apache.commons.fileupload2.core.FileItem;
+import org.apache.commons.fileupload2.core.DiskFileItemFactory;
+import org.apache.commons.fileupload2.jakarta.servlet6.JakartaServletFileUpload;
 
 import com.purplehillsbooks.json.JSONObject;
 import com.purplehillsbooks.json.JSONTokener;
 
-public class SendMailServlet extends javax.servlet.http.HttpServlet {
+public class SendMailServlet extends jakarta.servlet.http.HttpServlet {
 
     private static final long serialVersionUID = 1L;
     public static Exception fatalServerError;
     int counter;
 
     @Override
-    public void doGet(HttpServletRequest req, HttpServletResponse resp) {
+    public void doGet(jakarta.servlet.http.HttpServletRequest req, jakarta.servlet.http.HttpServletResponse resp) {
         //do nothing
     }
 
     @Override
-    public void doPost(HttpServletRequest request, HttpServletResponse response) throws IOException, ServletException {
+    public void doPost(jakarta.servlet.http.HttpServletRequest request, jakarta.servlet.http.HttpServletResponse response) throws IOException, ServletException {
         request.setCharacterEncoding("UTF-8");
 
         String sendStatus = "";
         String fieldValue = null;
         List<EmailAttachment> attList = new ArrayList<EmailAttachment>();
         try {
-            List<FileItem> fileItemList = new ServletFileUpload(new DiskFileItemFactory()).parseRequest(request);
+            List<FileItem> fileItemList = new JakartaServletFileUpload(DiskFileItemFactory.builder().get()).parseRequest(request);
             for(FileItem item : fileItemList){
                 if(item.isFormField()){
-                    String hexEncodedValue = item.getString("UTF-8");
+                    String hexEncodedValue = item.getString(StandardCharsets.UTF_8);
                     fieldValue = hexDecode(hexEncodedValue);
                 }
                 else {

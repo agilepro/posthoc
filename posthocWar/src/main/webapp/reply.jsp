@@ -18,12 +18,6 @@
 %><%@page import="java.util.Date"
 %><%@page import="java.util.List"
 %><%@page import="java.util.Properties"
-%><%@page import="javax.mail.Address"
-%><%@page import="javax.mail.BodyPart"
-%><%@page import="javax.mail.Multipart"
-%><%@page import="javax.mail.Session"
-%><%@page import="javax.mail.internet.InternetAddress"
-%><%@page import="javax.mail.internet.MimeMessage"
 %><%
 
     request.setCharacterEncoding("utf-8");

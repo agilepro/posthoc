@@ -1,6 +1,5 @@
 package com.purplehillsbooks.posthoc;
 
-import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileOutputStream;
 import java.io.IOException;
@@ -8,9 +7,6 @@ import java.io.InputStream;
 import java.util.Collections;
 import java.util.Comparator;
 import java.util.List;
-import java.util.regex.Matcher;
-import java.util.regex.Pattern;
-
 import org.subethamail.smtp.helper.SimpleMessageListener;
 
 import com.purplehillsbooks.streams.MemFile;
@@ -26,8 +22,6 @@ public class MailListener implements SimpleMessageListener {
     //configured amount of time (days) that messages should stay in the storage location
     //automatically deleted after this number of days
     public static int storageDays = 5;
-
-    private static final Pattern SUBJECT_PATTERN = Pattern.compile("^Subject: (.*)$");
 
     /**
      * Creates the listener.
@@ -78,10 +72,9 @@ public class MailListener implements SimpleMessageListener {
 
         MemFile mailContent = new MemFile();
         mailContent.fillWithInputStream(data);
-        String subject = getSubjectFromStr(mailContent);
 
         synchronized (MailListener.class) {
-            saveEmailToFile(from, to, subject, mailContent);
+            saveEmailToFile(mailContent);
         }
     }
 
@@ -134,7 +127,7 @@ public class MailListener implements SimpleMessageListener {
      * @param mailContent the content of the email to be saved.
      * @return the path of the created file.
      */
-    private static void saveEmailToFile(String from, String to, String subject, MemFile mailContent) throws Exception {
+    private static void saveEmailToFile(MemFile mailContent) throws Exception {
         long thisUnique = System.currentTimeMillis();
 
         if (thisUnique<=lastUnique) {
@@ -153,6 +146,8 @@ public class MailListener implements SimpleMessageListener {
      * @param data a string representing the email content.
      * @return the subject of the email, or an empty subject if not found.
      */
+    
+    /*
     private static String getSubjectFromStr(MemFile data) throws Exception {
         BufferedReader reader = new BufferedReader(data.getReader());
 
@@ -165,6 +160,7 @@ public class MailListener implements SimpleMessageListener {
         }
         return "[No Subject Found]";
     }
+    */
 
     /**
     * Sorts the list of email messages in reverse chronological order.

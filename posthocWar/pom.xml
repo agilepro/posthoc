@@ -1,0 +1,124 @@
+    <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+      xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
+      <modelVersion>4.0.0</modelVersion>
+     
+      <groupId>com.purplehillsbooks</groupId>
+      <artifactId>posthoc</artifactId>
+      <version>3.0</version>
+      <packaging>war</packaging>
+     
+      <properties>
+        <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
+        <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
+        <maven.compiler.source>21</maven.compiler.source>
+        <maven.compiler.target>21</maven.compiler.target>
+      </properties>
+     
+      <dependencies>
+        <dependency>
+          <groupId>junit</groupId>
+          <artifactId>junit</artifactId>
+          <version>4.13.2</version>
+          <scope>test</scope>
+        </dependency>
+        
+        <!-- https://mvnrepository.com/artifact/com.purplehillsbooks.purple/purple -->
+		<dependency>
+		    <groupId>com.purplehillsbooks.purple</groupId>
+		    <artifactId>purple</artifactId>
+		    <version>3.2</version>
+		    <scope>system</scope>
+		    <systemPath>${project.basedir}/lib/purple-3.2.jar</systemPath>
+		</dependency>
+		
+		<!-- https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api -->
+		<dependency>
+		    <groupId>jakarta.servlet</groupId>
+		    <artifactId>jakarta.servlet-api</artifactId>
+		    <version>6.1.0-M1</version>
+		    <scope>provided</scope>
+		</dependency>
+				
+		<!-- https://mvnrepository.com/artifact/org.apache.tomcat/tomcat-catalina -->
+		<dependency>
+		    <groupId>org.apache.tomcat</groupId>
+		    <artifactId>tomcat-catalina</artifactId>
+		    <version>11.0.0-M15</version>
+		    <scope>provided</scope>
+		</dependency>
+        
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-fileupload2 -->
+        <dependency>
+            <groupId>org.apache.commons</groupId>
+            <artifactId>commons-fileupload2</artifactId>
+            <version>2.0.0-M2</version>
+            <type>pom</type>
+        </dependency>
+        <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-fileupload2-core -->
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-fileupload2-core</artifactId>
+		    <version>2.0.0-M2</version>
+		</dependency>
+		<!-- https://mvnrepository.com/artifact/org.apache.commons/commons-fileupload2-jakarta-servlet6 -->
+		<dependency>
+		    <groupId>org.apache.commons</groupId>
+		    <artifactId>commons-fileupload2-jakarta-servlet6</artifactId>
+		    <version>2.0.0-M2</version>
+		</dependency>
+
+        <!-- https://mvnrepository.com/artifact/jakarta.mail/jakarta.mail-api -->
+        <dependency>
+            <groupId>jakarta.mail</groupId>
+            <artifactId>jakarta.mail-api</artifactId>
+            <version>2.1.2</version>
+        </dependency>
+        <dependency>
+            <groupId>com.sun.mail</groupId>
+            <artifactId>jakarta.mail</artifactId>
+            <version>2.0.1</version>
+        </dependency>
+        
+        <!-- https://mvnrepository.com/artifact/com.github.ppodgorsek/subethasmtp -->
+        <dependency>
+            <groupId>com.github.ppodgorsek</groupId>
+            <artifactId>subethasmtp</artifactId>
+            <version>4.0.0</version>
+        </dependency>
+
+
+		
+      </dependencies>
+      
+      <build>
+	    <plugins>
+	        <plugin>
+	            <artifactId>maven-compiler-plugin</artifactId>
+	            <version>3.12.1</version>
+	            <configuration>
+	                <source>8</source>
+	                <target>8</target>
+	            </configuration>
+	        </plugin>
+	        <plugin>
+			    <artifactId>maven-war-plugin</artifactId>
+	            <version>3.4.0</version>
+			    <configuration>
+			        <attachClasses>true</attachClasses>
+			        <webXml>src/main/webapp/WEB-INF/web.xml</webXml>
+			        <webResources>
+			            <resource>
+			                <directory>src/main/webapp</directory>
+			            </resource>
+                        <resource>
+                           <directory>lib</directory>
+                           <targetPath>WEB-INF/lib</targetPath>
+                        </resource>
+			        </webResources>
+			    </configuration>
+			</plugin>
+	        
+	    </plugins>
+	</build>
+
+</project>
