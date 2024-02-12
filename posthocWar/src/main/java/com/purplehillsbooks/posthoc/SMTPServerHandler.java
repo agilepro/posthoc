@@ -5,7 +5,7 @@ import java.net.InetAddress;
 import org.subethamail.smtp.helper.SimpleMessageListenerAdapter;
 import org.subethamail.smtp.server.SMTPServer;
 
-import com.purplehillsbooks.json.JSONException;
+import com.purplehillsbooks.json.SimpleException;
 
 /**
  * Starts and stops the SMTP server.
@@ -33,7 +33,7 @@ public class SMTPServerHandler {
             smtpServer.setPort(port);
             smtpServer.start();
         } catch (Exception e) {
-            throw new JSONException("Server is unable to start post {0} and bindaddress {1}", e, Integer.toString(port), bindAddress.toString());
+            throw new SimpleException("Server is unable to start post %s and bindaddress %s", e, Integer.toString(port), bindAddress.toString());
         }
     }
 

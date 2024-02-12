@@ -9,7 +9,7 @@ import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 
-import com.purplehillsbooks.json.JSONException;
+import com.purplehillsbooks.json.SimpleException;
 
 public class PostHocServlet extends jakarta.servlet.http.HttpServlet {
 
@@ -47,7 +47,7 @@ public class PostHocServlet extends jakarta.servlet.http.HttpServlet {
          }
          catch (Exception e) {
              fatalServerError = e;
-             JSONException.traceException(e,"PostHocServlet: crash on initialization");
+             SimpleException.traceException(e,"PostHocServlet: crash on initialization");
          }
     } 
     
@@ -57,7 +57,7 @@ public class PostHocServlet extends jakarta.servlet.http.HttpServlet {
             throw fatalServerError;
         }
         if (dataFolder==null) {
-            throw new JSONException("PostHoc server not initialized!  DataFolder is null.");
+            throw new SimpleException("PostHoc server not initialized!  DataFolder is null.");
         }
         return dataFolder;
     }
@@ -71,11 +71,11 @@ public class PostHocServlet extends jakarta.servlet.http.HttpServlet {
         if (!theOutboxDir.exists()) {           
             try{
                 if (!theOutboxDir.mkdir()) {
-                    throw new JSONException("Create folder failed: {0}", theOutboxDir.getCanonicalPath());
+                    throw new SimpleException("Create folder failed: %s", theOutboxDir.getCanonicalPath());
                 };               
             } 
             catch(SecurityException se){
-                throw new JSONException("Outbox Directory not created at {0}",se,theOutboxDir.getCanonicalPath());
+                throw new SimpleException("Outbox Directory not created at %s",se,theOutboxDir.getCanonicalPath());
             }
         }
         return theOutboxDir;
@@ -87,11 +87,11 @@ public class PostHocServlet extends jakarta.servlet.http.HttpServlet {
         if (!tempFolder.exists()) {           
             try{
                 if (!tempFolder.mkdir()) {
-                    throw new JSONException("Create folder failed: {0}", tempFolder.getCanonicalPath());
+                    throw new SimpleException("Create folder failed: %s", tempFolder.getCanonicalPath());
                 };               
             } 
             catch(SecurityException se){
-                throw new JSONException("Temp Directory not created at {0}",se,tempFolder.getCanonicalPath());
+                throw new SimpleException("Temp Directory not created at %s",se,tempFolder.getCanonicalPath());
             }
         }
         return tempFolder;

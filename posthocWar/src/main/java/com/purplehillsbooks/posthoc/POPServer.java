@@ -12,7 +12,7 @@ import java.net.Socket;
 import java.util.ArrayList;
 import java.util.List;
 
-import com.purplehillsbooks.json.JSONException;
+import com.purplehillsbooks.json.SimpleException;
 import com.purplehillsbooks.streams.StreamHelper;
 import com.purplehillsbooks.xml.Mel;
 
@@ -40,7 +40,7 @@ public class POPServer extends Thread {
                 handleRequests();
             }
             catch (Exception e) {
-                JSONException.traceException(e,"POP SERVER: -- EXCEPTION --");
+                SimpleException.traceException(e,"POP SERVER: -- EXCEPTION --");
             }
         }
     }

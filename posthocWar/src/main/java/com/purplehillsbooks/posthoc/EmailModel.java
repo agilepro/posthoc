@@ -23,7 +23,7 @@ import jakarta.mail.internet.MimeBodyPart;
 import jakarta.mail.internet.MimeMessage;
 import jakarta.mail.internet.MimeMultipart;
 
-import com.purplehillsbooks.json.JSONException;
+import com.purplehillsbooks.json.SimpleException;
 import com.purplehillsbooks.json.JSONObject;
 import com.purplehillsbooks.streams.HTMLWriter;
 
@@ -45,7 +45,7 @@ public final class EmailModel {
 
     public static synchronized EmailModel findMessage(File sFile) throws Exception {
         if (!sFile.exists()) {
-            throw new JSONException("Unable to read an email message, file does not exist: {0}",sFile.getAbsolutePath());
+            throw new SimpleException("Unable to read an email message, file does not exist: {0}",sFile.getAbsolutePath());
         }
         EmailModel em = cache.get(sFile);
         if (em!=null) {
@@ -73,10 +73,10 @@ public final class EmailModel {
 
     public static List<EmailModel> getAllMessages(File containingFolder) throws Exception {
         if (containingFolder==null) {
-            throw new JSONException("getAllMessages needs a containing folder parameter, got null");
+            throw new SimpleException("getAllMessages needs a containing folder parameter, got null");
         }
         if (!containingFolder.exists()) {
-            throw new JSONException("getAllMessages containing folder does not exist at {0}", containingFolder.getAbsolutePath());
+            throw new SimpleException("getAllMessages containing folder does not exist at %s", containingFolder.getAbsolutePath());
         }
         ArrayList<EmailModel> ret = new ArrayList<EmailModel>();
         for (File existingFile : containingFolder.listFiles()) {
@@ -116,10 +116,10 @@ public final class EmailModel {
 
     private MimeMessage loadMimeMessage() throws Exception {
         if (filePath==null) {
-            throw new JSONException("Cannot load message.  File member of EmailModel has not been set.");
+            throw new SimpleException("Cannot load message.  File member of EmailModel has not been set.");
         }
         if (!filePath.exists()) {
-            throw new JSONException("Cannot load message.  File does not exist: {0}", filePath.getCanonicalPath());
+            throw new SimpleException("Cannot load message.  File does not exist: %s", filePath.getCanonicalPath());
         }
         Properties props = new Properties();
         Session mailSession = Session.getDefaultInstance(props);
@@ -294,7 +294,7 @@ public final class EmailModel {
             fos.close();
         }
         catch (Exception ex) {
-            throw new JSONException("Unable to writeMessage (subject={0}) (file={1})", ex, subject, filePath.getCanonicalPath());
+            throw new SimpleException("Unable to writeMessage (subject=%s) (file=%s)", ex, subject, filePath.getCanonicalPath());
         }
     }
 
