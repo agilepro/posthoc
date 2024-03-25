@@ -1,19 +1,19 @@
     <project xmlns="http://maven.apache.org/POM/4.0.0" xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
       xsi:schemaLocation="http://maven.apache.org/POM/4.0.0 http://maven.apache.org/xsd/maven-4.0.0.xsd">
       <modelVersion>4.0.0</modelVersion>
-     
+
       <groupId>com.purplehillsbooks</groupId>
       <artifactId>posthoc</artifactId>
       <version>3.0</version>
       <packaging>war</packaging>
-     
+
       <properties>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
         <project.reporting.outputEncoding>UTF-8</project.reporting.outputEncoding>
         <maven.compiler.source>21</maven.compiler.source>
         <maven.compiler.target>21</maven.compiler.target>
       </properties>
-     
+
       <dependencies>
         <dependency>
           <groupId>junit</groupId>
@@ -21,7 +21,7 @@
           <version>4.13.2</version>
           <scope>test</scope>
         </dependency>
-        
+
         <!-- https://mvnrepository.com/artifact/com.purplehillsbooks.purple/purple -->
 		<dependency>
 		    <groupId>com.purplehillsbooks.purple</groupId>
@@ -30,7 +30,7 @@
 		    <scope>system</scope>
 		    <systemPath>${project.basedir}/lib/purple-3.2.jar</systemPath>
 		</dependency>
-		
+
 		<!-- https://mvnrepository.com/artifact/jakarta.servlet/jakarta.servlet-api -->
 		<dependency>
 		    <groupId>jakarta.servlet</groupId>
@@ -38,7 +38,7 @@
 		    <version>6.1.0-M1</version>
 		    <scope>provided</scope>
 		</dependency>
-				
+
 		<!-- https://mvnrepository.com/artifact/org.apache.tomcat/tomcat-catalina -->
 		<dependency>
 		    <groupId>org.apache.tomcat</groupId>
@@ -46,7 +46,7 @@
 		    <version>11.0.0-M15</version>
 		    <scope>provided</scope>
 		</dependency>
-        
+
         <!-- https://mvnrepository.com/artifact/org.apache.commons/commons-fileupload2 -->
         <dependency>
             <groupId>org.apache.commons</groupId>
@@ -73,12 +73,14 @@
             <artifactId>jakarta.mail-api</artifactId>
             <version>2.1.2</version>
         </dependency>
-        <dependency>
-            <groupId>com.sun.mail</groupId>
-            <artifactId>jakarta.mail</artifactId>
-            <version>2.0.1</version>
-        </dependency>
-        
+		<!-- https://mvnrepository.com/artifact/org.eclipse.angus/angus-mail -->
+		<dependency>
+			<groupId>org.eclipse.angus</groupId>
+			<artifactId>angus-mail</artifactId>
+			<version>2.0.2</version>
+			<scope>runtime</scope>
+		</dependency>
+
         <!-- https://mvnrepository.com/artifact/com.github.ppodgorsek/subethasmtp -->
         <dependency>
             <groupId>com.github.ppodgorsek</groupId>
@@ -87,9 +89,9 @@
         </dependency>
 
 
-		
+
       </dependencies>
-      
+
       <build>
 	    <plugins>
 	        <plugin>
@@ -117,7 +119,7 @@
 			        </webResources>
 			    </configuration>
 			</plugin>
-	        
+
 	    </plugins>
 	</build>
 

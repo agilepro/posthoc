@@ -1,3 +1,3 @@
 cd posthocWar
-call gradle clean build
+call mvn clean package
 pause

@@ -20,6 +20,15 @@ public class SendMailServlet extends jakarta.servlet.http.HttpServlet {
     int counter;
 
     @Override
+    public void init() {
+        System.out.println("START POSTHOC - HttpService.init called");
+    }
+    @Override
+    public void destroy() {
+        System.out.println("STOP POSTHOC - HttpService.destroy called");
+    }
+
+    @Override
     public void doGet(jakarta.servlet.http.HttpServletRequest req, jakarta.servlet.http.HttpServletResponse resp) {
         //do nothing
     }
@@ -127,7 +136,5 @@ public class SendMailServlet extends jakarta.servlet.http.HttpServlet {
             }
             hasMore = pos<input.length();
         }
-
-
     }
 }
